@@ -5,6 +5,8 @@ import { App } from './App'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
-        <App />
+        <div className='absolute inset-0 h-screen w-screen bg-template-gray'>
+            <App />
+        </div>
     </React.StrictMode>
 )
