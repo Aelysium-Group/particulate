@@ -14,7 +14,7 @@ export const DBackground = (props: DBackground) => {
 
     useEffect(()=>{
         setCols(Math.floor(window.innerWidth / size));
-        setRows(Math.floor((window.innerHeight - 124) / size));
+        setRows(Math.floor(window.innerHeight / size));
     },[auto]);
 
     const render = () => {
@@ -24,12 +24,12 @@ export const DBackground = (props: DBackground) => {
 
         return (
             <div
-                className={`absolute w-screen h-screen inset-0 opacity-80 bg-gradient-to-br from-orange-900 to-cyan-900 z-0`}
+                className={`absolute w-screen h-screen inset-0 opacity-90 bg-gradient-to-t from-emerald-900 to-blue-900 z-0`}
                 style={{width: (124 * cols) + "px", height: (124 * rows) + "px"}}
                 draggable={false}
                 >
                 <div
-                    className={`w-screen h-screen duration-[0.5s] ${ props.active ? "bg-transparent" : "bg-template-gray"}`}
+                    className={`w-screen h-screen duration-[0.5s] ${ props.active ? "bg-transparent" : "bg-template-gray/90"}`}
                     draggable={false}
                     >
                     <div

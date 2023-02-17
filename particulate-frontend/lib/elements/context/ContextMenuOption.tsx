@@ -1,10 +1,10 @@
-import { EventType } from "../../events/EventType";
+import { EventName } from "../../events/EventName";
 import { Icon, IconName } from "../Icon";
 
 export class Option {
     protected _icon: IconName;
     protected _title: string;
-    protected _eventName: EventType;
+    protected _eventName: EventName;
     protected _binding: string;
     protected _invert: boolean;
 
@@ -14,7 +14,7 @@ export class Option {
     public get invert() { return this._invert; }
     public get binding() { return this._binding; }
 
-    constructor(icon: IconName, title: string, eventName: EventType, binding?: string, invert?: boolean) {
+    constructor(icon: IconName, title: string, eventName: EventName, binding?: string, invert?: boolean) {
         this._icon = icon;
         this._title = title;
         this._eventName = eventName;
@@ -26,7 +26,7 @@ export class Option {
 type ContextMenuOption = {
     icon: IconName;
     title: string;
-    eventName: EventType;
+    eventName: EventName;
     binding: string;
     invert: boolean;
     onClick: Function;

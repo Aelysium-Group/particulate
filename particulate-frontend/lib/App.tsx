@@ -1,71 +1,73 @@
 import { useState, useEffect } from 'react';
-import { DButtonClick, DButtonToggle } from "./elements/dashboard/DButton";
 import { DBackground } from "./elements/dashboard/DBackground";
-import { Button, ButtonType } from './elements/generic/controls/Button';
 import { MasterEditButton } from "./elements/dashboard/MasterEditButton";
-import { InterfaceColor } from "./resources/InterfaceColor";
 import { ContextMenu } from "./elements/context/ContextMenu";
 import { IconName } from "./elements/Icon";
-import { EventType } from "./events/EventType";
+import { EventName } from "./events/EventName";
 import { Option } from "./elements/context/ContextMenuOption";
 import { ContextLaunchingDiv } from "./elements/context/ContextLaunchingDiv";
 import { CreateElementPopup } from './elements/popups/CreateElementPopup';
-import { LightBar, throw_lightBarColorUpdate } from './elements/LightBar';
-import { Control } from './elements/generic/controls/Control';
+import { LightBar } from './elements/LightBar';
+import { Control, ControlType } from './elements/generic/controls/Control';
+import { AppLog } from './elements/log/AppLog';
+import { throw_lightBarColorUpdate, throw_event } from './events/events';
+import { DButtonClick } from './elements/dashboard/DButtonClick';
+import { DButtonToggle } from './elements/dashboard/DButtonToggle';
+import { useLog } from './hooks/useLog';
+import { AnimatePresence } from 'framer-motion';
+import { DLabel } from './elements/dashboard/DLabel';
 
 const editingContextMenu = [
-    new Option(IconName.ADD, 'New Controller', EventType.ContextMenuOption_NewElement),
+    new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
 ];
 
 const liveContextMenu = [
-    new Option(IconName.STOP, 'Stop All Effects', EventType.ContextMenuOption_StopEffects, "", false),
+    new Option(IconName.STOP, 'Stop All Effects', EventName.ContextMenuOption_StopEffects, "", false),
 ];
 
-const controls = [
-    new Button(0,0),
-    new Button(0,1),
-    new Button(0,2),
-    new Button(0,3),
-    new Button(1,0, InterfaceColor.ORANGE, ButtonType.TOGGLE),
-    new Button(1,1, InterfaceColor.ORANGE, ButtonType.TOGGLE),
-    new Button(1,2, InterfaceColor.ORANGE, ButtonType.TOGGLE),
-    new Button(1,3, InterfaceColor.ORANGE, ButtonType.TOGGLE),
-]
-
 export const App = () => {
+    const log = useLog();
     const [ backgroundGridShow, setBackgroundGridShow ] = useState(false);
     const [ editMode, setEditMode ] = useState(false);
-    const [ activeControls, setControls ]: [ Control[], Function ] = useState([]);
+    const [ controls, setControls ]: [ Control[], Function ] = useState([]);
 
-    const removeController = (uuid: string) => {
-        activeControls.find((control => control.uuid == uuid));
+    const stopEffects = () => {
+        throw_lightBarColorUpdate("main","bg-red-500");
+        log.add.error("Stopped all effects!");
     }
-    const addController = (control: Control) => {
-        let newControls = activeControls;
-        newControls.push(control);
-        setControls(newControls);
+    const removeControl = (uuid: string) => setControls(controls.filter(control => control.uuid !== uuid));
+    const addController = (object: object) => {
+        const newControl = Control.parseControl(object);
+
+        let newArray = controls.map((item: Control) => { return {...item}; })
+        newArray.push(newControl);
+        
+        setControls(newArray);
+        throw_event(EventName.CloseCreateElementPopUp);
+    }
+
+    const toggleEditMode = () => {
+        if(editMode) {
+            throw_event(EventName.ExitControlEditMode);
+            setEditMode(false);
+        } else {
+            throw_event(EventName.EnterControlEditMode);
+            setEditMode(true);
+        }
     }
 
     useEffect(()=>{
-        document.addEventListener(EventType.ContextMenuOption_StopEffects,() => throw_lightBarColorUpdate("main","bg-red-500"));
-        document.addEventListener(EventType.RegisterNewControl,(e: any) => addController(e.detail.control));
+        document.addEventListener(EventName.ContextMenuOption_StopEffects,stopEffects);
+        document.addEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
+        document.addEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
         return () => {
-            document.removeEventListener(EventType.ContextMenuOption_StopEffects,() => throw_lightBarColorUpdate("main","bg-red-500"));
-            document.removeEventListener(EventType.RegisterNewControl,(e: any) => addController(e.detail.control));
+            document.removeEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
+            document.removeEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
+            document.removeEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
         }
-    },[]);
+    },[controls]);
 
     const view_default = () => {
-        let controlComponents: JSX.Element[] = [];
-        let i = 0;
-        for (const item of controls) {
-            if(item instanceof Button) {
-                if(item.type == ButtonType.CLICK)  controlComponents.push(<DButtonClick  key={i} uuid={item.uuid} color={item.color} initialCell={item.position} editMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)}></DButtonClick> );
-                if(item.type == ButtonType.TOGGLE) controlComponents.push(<DButtonToggle key={i} uuid={item.uuid} color={item.color} initialCell={item.position} editMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)}></DButtonToggle>);
-            }
-            i++;
-        }
-
         return (
             <>
                 <ContextMenu />
@@ -85,14 +87,21 @@ export const App = () => {
                     </div>
                     <div className="relative h-[calc(100vh_-_124px)] w-screen">
                         <ContextLaunchingDiv options={editMode ? editingContextMenu : liveContextMenu}>
-                            <DBackground active={backgroundGridShow}/>
+                            { editMode ? <DBackground active={backgroundGridShow}/> : <div className={`absolute w-screen h-screen inset-0 bg-template-gray z-0`} />}
                         </ContextLaunchingDiv>
                         <div className="z-10" draggable={false}>
-                            {controlComponents}
+                            <AnimatePresence>
+                                {controls.map((item: Control) => {
+                                    if(item.type == ControlType.BUTTON_CLICK)   return (<DButtonClick  key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_TOGGLE)  return (<DButtonToggle key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.LABEL)          return (<DLabel        key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                })}
+                            </AnimatePresence>
                         </div>
                     </div>
-                    <MasterEditButton onClick={() => setEditMode(!editMode)} editMode={editMode} />
+                    <MasterEditButton onClick={toggleEditMode} editMode={editMode} />
                 </div>
+                <AppLog />
             </>
         );
     }

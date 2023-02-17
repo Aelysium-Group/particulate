@@ -29,11 +29,11 @@ export const PopUp = (props: PopUp) => {
                         className='frosted-glass block relative top-25px min-h-[300px] rounded-lg bg-zinc-900/75 overflow-auto overflow-x-hidden shadow-2xl'
                         drag
                         dragConstraints={{left: 0, right: 0, top: 0, bottom: 200}}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                        transition={{ type: "spring", stiffness: 100, damping: 10 }}
                         >
                         <motion.div
                             className={`absolute left-25px top-25px cursor-pointer leading-none z-50`}
-                            onClick={() => props.close()}
+                            onTapStart={() => props.close()}
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.8 }}
                             transition={{ type: "spring", stiffness: 400, damping: 12 }}

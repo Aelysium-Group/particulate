@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Icon, IconName } from "../Icon";
-import { throw_closeContextMenuEvent } from "../../events/ContextMenuEvents";
+import { throw_closeContextMenuEvent } from "../../events/events";
 
 type MasterEditButton = {
     editMode: boolean;

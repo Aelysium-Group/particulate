@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ContextMenuOption, Option } from './ContextMenuOption';
-import { EventType } from '../../events/EventType';
-import { throw_closeContextMenuEvent } from '../../events/ContextMenuEvents';
+import { EventName } from '../../events/EventName';
+import { throw_closeContextMenuEvent, throw_genericEventFromContextMenu } from '../../events/events';
 const defaultPosition = { x: window.innerWidth * 0.5, y: window.innerHeight * 1.5 };
 
 type ContextMenu = {
@@ -13,32 +13,27 @@ export const ContextMenu = (props: ContextMenu) => {
     const [ details, setDetails ]: [ Object, Function ] = useState({});
     const [ active, setActive ] = useState(false);
 
-    const callEventFromOption = (eventName: EventType) => {
-        const event = new CustomEvent(eventName, { detail: { target: position , details}});
-        document.dispatchEvent(event);
-    }
-
     useEffect(()=>{
-        document.addEventListener("react-contextMenu-open", (e: any) => {
+        document.addEventListener(EventName.ContextMenuOpen, (e: any) => {
             setActive(true);
             setPosition(e.detail.position);
             setOptions(e.detail.options);
             setDetails(e.detail.details);
         });
-        document.addEventListener("react-contextMenu-close", () => {
+        document.addEventListener(EventName.ContextMenuClose, () => {
             setActive(false);
             setPosition(defaultPosition);
             setOptions([]);
             setDetails({});
         });
         return () => {
-            document.removeEventListener("react-contextMenu-open", (e: any) => {
+            document.removeEventListener(EventName.ContextMenuOpen, (e: any) => {
                 setActive(true);
                 setPosition(e.detail.position);
                 setOptions(e.detail.options);
                 setDetails(e.detail.details);
             });
-            document.addEventListener("react-contextMenu-close", () => {
+            document.removeEventListener(EventName.ContextMenuClose, () => {
                 setActive(false);
                 setPosition(defaultPosition);
                 setOptions([]);
@@ -57,7 +52,7 @@ export const ContextMenu = (props: ContextMenu) => {
                     title={item.title} 
                     icon={item.icon} 
                     eventName={item.eventName} 
-                    onClick={() => callEventFromOption(item.eventName)}
+                    onClick={() => throw_genericEventFromContextMenu(item.eventName, position, details)}
                     invert={item.invert}
                     binding={item.binding}
                     />)

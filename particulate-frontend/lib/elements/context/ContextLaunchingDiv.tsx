@@ -1,4 +1,4 @@
-import { throw_closeContextMenuEvent, throw_openContextMenuEvent } from "../../events/ContextMenuEvents";
+import { throw_closeContextMenuEvent, throw_openContextMenuEvent } from "../../events/events";
 import { Option } from "./ContextMenuOption";
 
 type ContextMenuLauncherCallBack = (x: number, y: number) => any;

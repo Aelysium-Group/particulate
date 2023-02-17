@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
-import { EventType } from '../events/EventType';
+import { EventName } from '../events/EventName';
 import { BackgroundColor } from '../resources/BackgroundColor';
-
-export const throw_lightBarColorUpdate = (id: string, color: BackgroundColor) => {
-    const event = new CustomEvent(EventType.LightBar_ColorUpdate, { detail: {id, color} });
-    document.dispatchEvent(event);
-}
 
 type LightBar = {
     catchId: string;
@@ -22,9 +17,9 @@ export const LightBar = (props: LightBar) => {
             }
     }
     useEffect(()=> {
-        document.addEventListener(EventType.LightBar_ColorUpdate,event_catchLightBarUpdate);
+        document.addEventListener(EventName.LightBar_ColorUpdate,event_catchLightBarUpdate);
         return () => {
-            document.removeEventListener(EventType.LightBar_ColorUpdate,event_catchLightBarUpdate);
+            document.removeEventListener(EventName.LightBar_ColorUpdate,event_catchLightBarUpdate);
         }
     },[]);
 

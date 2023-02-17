@@ -1,14 +1,19 @@
-export const EventType = {
+export const EventName = {
     ContextMenuOpen: "react-contextMenu-open",
     ContextMenuClose: "react-contextMenu-close",
 
-    ContextMenuOption_NewElement: "contextMenu-option-newElement",
-    ContextMenuOption_DeleteElement: "contextMenu-option-deleteElement",
+    OpenCreateElementPopUp: "OpenCreateElementPopUp",
+    CloseCreateElementPopUp: "CloseCreateElementPopUp",
+
+    EnterControlEditMode: "EnterControlEditMode",
+    ExitControlEditMode: "ExitControlEditMode",
 
     RegisterNewControl: "register-control",
     DeleteControl: "delete-control",
 
     ContextMenuOption_StopEffects: "contextMenu-option-stopEffects",
+
+    TransportLogMessages: "transport-logMessages",
 
     /**
      * Event contains the catchID of the Lightbar to target
@@ -16,4 +21,4 @@ export const EventType = {
      */
     LightBar_ColorUpdate: "lightbar-colorUpdate",
 } as const;
-export type EventType = typeof EventType[keyof typeof EventType];
+export type EventName = typeof EventName[keyof typeof EventName];
