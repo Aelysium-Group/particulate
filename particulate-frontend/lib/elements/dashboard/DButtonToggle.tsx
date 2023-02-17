@@ -94,7 +94,8 @@ export const DButtonToggle = (props: DButtonToggle) => {
                     className={`absolute rounded w-100px m-12px aspect-square overflow-hidden cursor-move ${drag ? "shadow-xl z-20" : ""}`}
                     whileHover={{ scale: 1.1 }}
                     exit={{ scale: 0, rotate: 90 }}
-                    initial={{background: props.color ?? InterfaceColor.RED, x: 0, y: 0}}
+                    initial={{background: props.color ?? InterfaceColor.RED, x: 0, y: 0, scale: 0, rotate: 90}}
+                    animate={{ scale: 1, rotate: 0 }}
                     style={{left: target.x, top: target.y}}
                     transition={{ type: "spring", stiffness: 100, damping: 10 }}
                     drag

@@ -15,7 +15,7 @@ export const CreateElementPopup = () => {
     const log = useLog();
 
     const [ active, setActive ] = useState(false);
-
+    const [ position, setPosition ] = useState({x: 0, y: 0});
     const [ channelID, setChannelID ]: [ any, Function ] = useState("");
     const [ color, setColor ]: [ any, Function ] = useState(undefined);
     const [ type, setType ]: [ any, Function ] = useState(undefined);
@@ -33,14 +33,14 @@ export const CreateElementPopup = () => {
         if(channelID == "") 
             if(type != ControlType.LABEL) return log.add.error("You must set a channelID!");
 
-        throw_createNewElementEvent(type, channelID, finalColor);
+        throw_createNewElementEvent(type, channelID, finalColor, position);
     }
 
     useEffect(() => {
-        document.addEventListener(EventName.OpenCreateElementPopUp,() => {setActive(true)});
+        document.addEventListener(EventName.OpenCreateElementPopUp,(e: any) => {setActive(true); setPosition(e.detail.target); });
         document.addEventListener(EventName.CloseCreateElementPopUp,() => {setActive(false); unset();});
         return () => {
-            document.removeEventListener(EventName.OpenCreateElementPopUp,() => {setActive(true)});
+            document.removeEventListener(EventName.OpenCreateElementPopUp,(e: any) => {setActive(true); setPosition(e.detail.target);});
             document.removeEventListener(EventName.CloseCreateElementPopUp,() => {setActive(false); unset();});
         }
     },[]);

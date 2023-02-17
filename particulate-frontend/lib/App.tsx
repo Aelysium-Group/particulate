@@ -8,7 +8,7 @@ import { Option } from "./elements/context/ContextMenuOption";
 import { ContextLaunchingDiv } from "./elements/context/ContextLaunchingDiv";
 import { CreateElementPopup } from './elements/popups/CreateElementPopup';
 import { LightBar } from './elements/LightBar';
-import { Control, ControlType } from './elements/generic/controls/Control';
+import { Control, ControlType, ParseableControlObject } from './elements/generic/controls/Control';
 import { AppLog } from './elements/log/AppLog';
 import { throw_lightBarColorUpdate, throw_event } from './events/events';
 import { DButtonClick } from './elements/dashboard/DButtonClick';
@@ -36,7 +36,7 @@ export const App = () => {
         log.add.error("Stopped all effects!");
     }
     const removeControl = (uuid: string) => setControls(controls.filter(control => control.uuid !== uuid));
-    const addController = (object: object) => {
+    const addController = (object: ParseableControlObject) => {
         const newControl = Control.parseControl(object);
 
         let newArray = controls.map((item: Control) => { return {...item}; })

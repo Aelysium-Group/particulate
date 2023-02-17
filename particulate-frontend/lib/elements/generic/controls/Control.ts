@@ -9,6 +9,12 @@ export const ControlType = {
 } as const;
 export type ControlType = typeof ControlType[keyof typeof ControlType];
 
+export type ParseableControlObject = {
+    type: ControlType;
+    color: InterfaceColor;
+    position: Position;
+}
+
 export class Control {
     readonly position: Position;
     readonly type: ControlType;
@@ -23,13 +29,16 @@ export class Control {
         this.type = type ?? ControlType.BUTTON_CLICK;
     }
 
-    public static parseControl = (object: any): Control => {
-        const requiredKeys = [ 'type', 'color' ]
+    public static parseControl = (object: ParseableControlObject): Control => {
+        const requiredKeys = [ 'type', 'color', "position" ]
         for (const key of requiredKeys)
             if(!(key in object)) throw new Error(`Missing key: ${key}`);
             
+        let x = Math.ceil(object.position.x / 124) - 1;
+        let y = Math.floor(object.position.y / 124) - 1;
+
         if(Object.values(ControlType).includes(object.type)) {
-            return new Control(0, 0, object.color, object.type);
+            return new Control(x, y, object.color, object.type);
         }
         throw new Error("Object couldn't be parsed as Control");
     }

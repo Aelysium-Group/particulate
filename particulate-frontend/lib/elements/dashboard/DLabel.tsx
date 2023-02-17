@@ -83,7 +83,8 @@ export const DLabel = (props: DLabel) => {
                     ref={currentRef}
                     className={`absolute h-47px font-bold text-xl text-template-white rounded-3xl cursor-pointer shadow-md z-10`}
                     whileHover={{ scale: 1.01 }}
-                    initial={{background: props.color ?? InterfaceColor.RED, x: 0, y: 0}}
+                    initial={{background: props.color ?? InterfaceColor.RED, x: 0, y: 0, scale: 0, rotate: 90}}
+                    animate={{ scale: 1, rotate: 0 }}
                     exit={{ scale: 0, rotate: 90 }}
                     style={{left: target.x, top: target.y}}
                     transition={{ type: "spring", stiffness: 100, damping: 10 }}

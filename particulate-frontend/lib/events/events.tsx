@@ -1,4 +1,5 @@
 import { Option } from "../elements/context/ContextMenuOption";
+import { ParseableControlObject } from "../elements/generic/controls/Control";
 import { LogMessages } from "../hooks/useLog";
 import { BackgroundColor } from "../resources/BackgroundColor";
 import { Position } from "../resources/Position";
@@ -23,8 +24,8 @@ export const throw_closeContextMenuEvent = () => {
     document.dispatchEvent(event);
 }
 
-export const throw_createNewElementEvent = (type: string, channelID: string, color: string) => {
-    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, color} });
+export const throw_createNewElementEvent = (type: string, channelID: string, color: string, position: Position) => {
+    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, color, position} as ParseableControlObject });
     document.dispatchEvent(event);
 }
 
