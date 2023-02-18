@@ -16,6 +16,7 @@ import { DButtonToggle } from './elements/dashboard/DButtonToggle';
 import { useLog } from './hooks/useLog';
 import { AnimatePresence } from 'framer-motion';
 import { DLabel } from './elements/dashboard/DLabel';
+import { LoginPopup } from './elements/popups/LoginPopup';
 
 const editingContextMenu = [
     new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
@@ -27,6 +28,7 @@ const liveContextMenu = [
 
 export const App = () => {
     const log = useLog();
+    const [ isLoggedIn, setLogin ] = useState(false);
     const [ backgroundGridShow, setBackgroundGridShow ] = useState(false);
     const [ editMode, setEditMode ] = useState(false);
     const [ controls, setControls ]: [ Control[], Function ] = useState([]);
@@ -57,10 +59,18 @@ export const App = () => {
     }
 
     useEffect(()=>{
+        document.addEventListener(EventName.LogAppError,(e: any) => log.add.error(e.detail));
+        document.addEventListener(EventName.LogAppMessage,(e: any) => log.add.message(e.detail));
+        document.addEventListener(EventName.LogAppSuccess,(e: any) => log.add.confirm(e.detail));
         document.addEventListener(EventName.ContextMenuOption_StopEffects,stopEffects);
         document.addEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
         document.addEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
+
+        throw_event(EventName.OpenLoginPopup);
         return () => {
+            document.removeEventListener(EventName.LogAppError,(e: any) => log.add.error(e.detail));
+            document.removeEventListener(EventName.LogAppMessage,(e: any) => log.add.message(e.detail));
+            document.removeEventListener(EventName.LogAppSuccess,(e: any) => log.add.confirm(e.detail));
             document.removeEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
             document.removeEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
             document.removeEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
@@ -70,6 +80,7 @@ export const App = () => {
     const view_default = () => {
         return (
             <>
+                <LoginPopup />
                 <ContextMenu />
                 <CreateElementPopup />
                 <div className="text-center">

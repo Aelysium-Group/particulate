@@ -5,6 +5,13 @@ export const EventName = {
     OpenCreateElementPopUp: "OpenCreateElementPopUp",
     CloseCreateElementPopUp: "CloseCreateElementPopUp",
 
+    OpenLoginPopup: "OpenLoginPopup",
+    CloseLoginPopup: "CloseLoginPopup",
+
+    LogAppError: "LogAppError",
+    LogAppSuccess: "LogAppSuccess",
+    LogAppMessage: "LogAppMessage",
+
     EnterControlEditMode: "EnterControlEditMode",
     ExitControlEditMode: "ExitControlEditMode",
 

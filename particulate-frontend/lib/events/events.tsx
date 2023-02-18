@@ -5,8 +5,8 @@ import { BackgroundColor } from "../resources/BackgroundColor";
 import { Position } from "../resources/Position";
 import { EventName } from "./EventName";
 
-export const throw_event = (eventName: EventName) => {
-    const event = new CustomEvent(eventName);
+export const throw_event = (eventName: EventName, detail: Object = {}) => {
+    const event = new CustomEvent(eventName, { detail });
     document.dispatchEvent(event);
 }
 

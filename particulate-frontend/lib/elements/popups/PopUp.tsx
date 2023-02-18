@@ -9,6 +9,7 @@ interface PopUp {
     children: JSX.Element | JSX.Element[];
     className?: string;
     width?: Pixels;
+    unCloseable?: boolean;
 }
 export const PopUp = (props: PopUp) => {
     const auto = useHookOntoScreen();
@@ -21,7 +22,7 @@ export const PopUp = (props: PopUp) => {
             >
             <div className='relative w-screen h-screen pb-100px'>
                 <div 
-                    className={`absolute left-0 top-0 w-screen h-screen bg-transparent duration-200 cursor-pointer opacity-80`}
+                    className={`absolute left-0 top-0 w-screen h-screen duration-200 opacity-80 ${ props.unCloseable ? "bg-neutral-900/80 cursor-default" : "bg-transparent cursor-pointer"}`}
                     onClick={() => props.close()}
                     ></div>
                 <div className='mx-auto' style={{width: props.width ?? "700px"}}>
@@ -31,15 +32,18 @@ export const PopUp = (props: PopUp) => {
                         dragConstraints={{left: 0, right: 0, top: 0, bottom: 200}}
                         transition={{ type: "spring", stiffness: 100, damping: 10 }}
                         >
-                        <motion.div
-                            className={`absolute left-25px top-25px cursor-pointer leading-none z-50`}
-                            onTapStart={() => props.close()}
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.8 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                            >
-                            <Icon iconName={IconName.CLOSE} className='w-40px aspect-square invert'/>
-                        </motion.div>
+                        {
+                            props.unCloseable ? <></> :
+                            <motion.div
+                                className={`absolute left-25px top-25px cursor-pointer leading-none z-50`}
+                                onTapStart={() => props.close()}
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.8 }}
+                                transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                                >
+                                <Icon iconName={IconName.CLOSE} className='w-40px aspect-square invert'/>
+                            </motion.div>
+                        }
                         <div className='p-10 z-20 isolate'>
                             { props.isVisible ? props.children : <></> }
                         </div>
