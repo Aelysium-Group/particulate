@@ -1,10 +1,10 @@
-import { StandardProtocol } from "../websocket-provider/interfaces/StandardProtocol";
 import { URIBuilder } from "../websocket-provider/providers/URIBuilder";
 import { WebsocketSubscriber } from "../websocket-provider/providers/WebsocketSubscriber";
 import { throw_event } from '../events/events';
 import { EventName } from "../events/EventName";
 import { WebsocketLaunchError } from "../errors/WebsocketLaunchError";
 import { Payload } from "../websocket-provider/providers/Payload";
+import { MessageType } from "../websocket-provider/message/MessageType";
 
 export class ConnectionResolvable {
     private _socket?: WebsocketSubscriber;
@@ -23,11 +23,10 @@ export class ConnectionResolvable {
     private authenticate = () => {
         if(!this._socket) throw new WebsocketLaunchError("There was an issue connecting to the remote server.");
 
-        const payload = new Payload(this._publicKey);
-              payload.set("username", this._username);
+        const payload = new Payload(this._publicKey, this._username, MessageType.LOGIN);
               payload.set("password", this._password);
 
-        this._socket.send(payload.toString());
+        this._socket.send(payload);
     }
 
     public resolve = async () => {

@@ -4,7 +4,9 @@ import { OnErrorCallback } from '../interfaces/callbacks/OnErrorCallback';
 import { OnMessageCallback } from '../interfaces/callbacks/OnMessageCallback';
 import { OnReconnectCallback } from '../interfaces/callbacks/OnReconnectCallback';
 import { WebSocketHandler } from '../interfaces/WebSocketHandler';
+import { WebsocketMessage } from '../message/WebsocketMessage';
 import { Heart } from './Heart';
+import { Payload } from './Payload';
 
 /**
  * A websocket subscriber.
@@ -173,10 +175,10 @@ export class WebsocketSubscriber implements WebSocketHandler {
      * @param message The message to be sent.
      * @throws An error if you try to send a message when the connection is closed.
      */
-    send = (message: string): void => {
+    send = (message: Payload): void => {
         if(!this.#_connection) throw new Error("Tried to send a message over a WebSocket connection that wasn't open!");
 
-        this.#_connection.send(message);
+        this.#_connection.send(message.toString());
     }
 
     /**

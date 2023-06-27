@@ -2,6 +2,7 @@ import { useScreen, useView, QueryMode, useHookOntoScreen } from 'react-ui-break
 import { Pixels } from '../../resources/Pixels';
 import { motion } from 'framer-motion';
 import { Icon, IconName } from '../Icon';
+import useMeasure from 'react-use-measure';
 
 interface PopUp {
     isVisible: boolean;
@@ -13,7 +14,7 @@ interface PopUp {
 }
 export const PopUp = (props: PopUp) => {
     const auto = useHookOntoScreen();
-
+    
     const view_desktop = () => (
         <motion.div className={`fixed left-0 w-screen h-screen z-50`}
             initial={{top: window.innerHeight}}
@@ -29,7 +30,7 @@ export const PopUp = (props: PopUp) => {
                     <motion.div
                         className='frosted-glass block relative top-25px min-h-[300px] rounded-lg bg-zinc-900/75 overflow-auto overflow-x-hidden shadow-2xl'
                         drag
-                        dragConstraints={{left: 0, right: 0, top: 0, bottom: 200}}
+                        dragConstraints={{left: 0, right: 0, top: window.innerHeight * -0.5, bottom: window.innerHeight * 0.8}}
                         transition={{ type: "spring", stiffness: 100, damping: 10 }}
                         >
                         {

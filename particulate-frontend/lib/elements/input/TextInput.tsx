@@ -1,6 +1,6 @@
 interface TextInput {
     onChange: Function;
-    value: string;
+    value: string | number;
     placeholder?: string;
 }
 export const TextInput = (props: TextInput) => (
