@@ -1,0 +1,15 @@
+#
+#
+# Emitters
+#
+#
+
+emitters:
+    1:
+        link-id: 1
+        effect-id: 1
+        loc:
+            world: "world"
+            x: 0.0
+            y: 0.0
+            z: 0.0

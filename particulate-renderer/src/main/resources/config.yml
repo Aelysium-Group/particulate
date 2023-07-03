@@ -1,0 +1,23 @@
+#
+#
+# Main Config
+#
+#
+# Required in order to run a copy of ShowControl
+registration-key: 00000
+
+# Should be left off if you don't intend to use custom animations for effects.
+enable-sequencer: false
+
+# Can be set to three options:
+# Controller
+# Renderer
+# Both - Should be used if you only plan on using a single server
+plugin-spec: Controller
+
+database:
+  host: localhost # host of your database
+  port: 3306 # default port for MariaDB and MySQL
+  database: db # name of your database. A database server can contain multiple databases
+  user: username
+  password: password

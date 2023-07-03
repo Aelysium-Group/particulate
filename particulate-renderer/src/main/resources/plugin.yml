@@ -1,0 +1,13 @@
+name: ShowControl
+version: ${project.version}
+main: net.noknt.showcontrol.ShowControl
+commands:
+  sc:
+    description: Used for all things related to ShowControl
+    usage: /sc
+    permission: showcontrol.sc
+  fx:
+    description: Used for running effects
+    usage: /fx
+    permission: showcontrol.fx
+depend: [ProtocolLib]
