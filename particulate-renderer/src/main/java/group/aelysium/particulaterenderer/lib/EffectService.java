@@ -12,7 +12,7 @@ public class EffectService extends Service {
     public void add(Effect effect) {
         this.effects.add(effect);
     }
-    public Optional<Effect> get(int effectId) {
+    public Optional<Effect> find(int effectId) {
         return this.effects.stream().filter(effect -> effect.getId() == effectId).findFirst();
     }
 
@@ -21,6 +21,6 @@ public class EffectService extends Service {
     }
 
     public void kill() {
-
+        this.effects.clear();
     }
 }

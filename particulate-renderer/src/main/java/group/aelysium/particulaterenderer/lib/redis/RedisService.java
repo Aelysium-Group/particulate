@@ -1,8 +1,7 @@
 package group.aelysium.particulaterenderer.lib.redis;
 
-import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
-import group.aelysium.particulatebridge.lib.model.Service;
-import group.aelysium.particulatebridge.lib.messager.redis.messages.GenericRedisMessage;
+import group.aelysium.particulaterenderer.lib.model.Service;
+import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -20,7 +19,6 @@ public class RedisService extends Service {
     ExecutorService executorService;
 
     public RedisService(RedisClient.Builder clientBuilder, char[] privateKey) {
-        super(true);
         this.clientBuilder = clientBuilder.setPrivateKey(privateKey);
         this.privateKey = privateKey;
 

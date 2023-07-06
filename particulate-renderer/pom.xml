@@ -59,6 +59,11 @@
             <artifactId>cloud-paper</artifactId>
             <version>1.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.2.4.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -2,9 +2,6 @@ package group.aelysium.particulaterenderer;
 
 import group.aelysium.particulaterenderer.central.API;
 import group.aelysium.particulaterenderer.central.Lifecycle;
-import group.aelysium.particulaterenderer.command.CommandShowControl;
-import group.aelysium.particulaterenderer.lib.controlPanel.block.OnPlace;
-import group.aelysium.particulaterenderer.lib.controlPanel.block.OnBreak;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,12 +30,5 @@ public final class ParticulateRenderer extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-    }
-
-    public void registerEvents() {
-        PluginManager eventManager = getServer().getPluginManager();
-
-        eventManager.registerEvents(new OnPlace(), this);
-        eventManager.registerEvents(new OnBreak(), this);
     }
 }

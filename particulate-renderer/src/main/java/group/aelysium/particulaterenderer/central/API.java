@@ -3,6 +3,13 @@ package group.aelysium.particulaterenderer.central;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
 import group.aelysium.particulaterenderer.ParticulateRenderer;
+import group.aelysium.particulaterenderer.lib.EffectService;
+import group.aelysium.particulaterenderer.lib.EmitterService;
+import group.aelysium.particulaterenderer.lib.RunnerQueueService;
+import group.aelysium.particulaterenderer.lib.model.Serviceable;
+import group.aelysium.particulaterenderer.lib.redis.RedisClient;
+import group.aelysium.particulaterenderer.lib.redis.RedisService;
+import group.aelysium.particulaterenderer.lib.redis.RedisSubscriber;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
@@ -11,15 +18,21 @@ import org.slf4j.Logger;
 
 import java.io.InputStream;
 import java.io.SyncFailedException;
+import java.util.HashMap;
 import java.util.function.Function;
 
-public class API {
+public class API extends Serviceable {
     private PaperCommandManager<CommandSender> commandManager;
     protected final ParticulateRenderer plugin;
     protected final PluginLogger pluginLogger;
 
 
     public API(ParticulateRenderer plugin, Logger logger) throws Exception {
+        super(new HashMap<>());
+        this.services.put(EmitterService.class, new EmitterService());
+        this.services.put(EffectService.class, new EffectService());
+        this.services.put(RunnerQueueService.class, new RunnerQueueService());
+
         this.plugin = plugin;
         this.pluginLogger = new PluginLogger(logger);
 
@@ -29,6 +42,13 @@ public class API {
                 Function.identity(),
                 Function.identity()
         );
+    }
+
+    public void setupRedis(RedisClient.Builder clientBuilder, char[] privateKey) {
+        RedisService service = new RedisService(clientBuilder, privateKey);
+        this.services.put(RedisService.class, service);
+
+        service.start(RedisSubscriber.class);
     }
 
     public InputStream getResourceAsStream(String filename)  {

@@ -1,7 +1,6 @@
 package group.aelysium.particulaterenderer.lib.redis;
 
-import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
-import group.aelysium.particulatebridge.lib.messager.redis.messages.GenericRedisMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
 import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisConnectionStateAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;

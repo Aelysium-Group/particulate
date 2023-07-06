@@ -2,7 +2,10 @@
 #
 # Effects
 #
+# Valid effects:
+# Particle, Block, Firework, Crystal, Dragon, Potion
 #
+
 effects:
     1:
         type: PARTICLE

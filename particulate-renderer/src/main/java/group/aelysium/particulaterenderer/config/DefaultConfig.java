@@ -6,6 +6,7 @@ public class DefaultConfig extends YAML {
     private static DefaultConfig config;
     private boolean debug = false;
 
+    private char[] redis_privateKey;
     private String redis_host = "";
     private int redis_port = 3306;
     private String redis_user = "default";
@@ -40,6 +41,10 @@ public class DefaultConfig extends YAML {
         config = null;
     }
 
+    public char[] getRedis_privateKey() {
+        return this.redis_privateKey;
+    }
+
     public String getRedis_host() {
         return this.redis_host;
     }
@@ -69,6 +74,8 @@ public class DefaultConfig extends YAML {
         }
 
         // Redis
+        this.redis_privateKey = this.getNode(this.data, "redis.private-key", String.class).toCharArray();
+        if(this.redis_privateKey.length == 0) throw new IllegalStateException("Please configure your Redis settings.");
 
         this.redis_host = this.getNode(this.data, "redis.host", String.class);
         if(this.redis_host.equals("")) throw new IllegalStateException("Please configure your Redis settings.");
