@@ -1,6 +1,5 @@
-package group.aelysium.particulatebridge.lib.redis;
+package group.aelysium.particulatebridge.lib.messager.redis;
 
-import group.aelysium.particulatebridge.lib.websocket.messages.GenericWebsocketMessage;
 import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisConnectionStateAdapter;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
@@ -60,12 +59,13 @@ public class RedisSubscriber {
      * @param rawMessage The message received.
      */
     protected void onMessage(String rawMessage) {
-        // Empty adapter method
+        System.out.println(rawMessage);
     }
 
     protected class RedisMessageListener extends RedisPubSubAdapter<String, String> {
         @Override
         public void message(String channel, String rawMessage) {
+            RedisSubscriber.this.onMessage(rawMessage);
         }
     }
 

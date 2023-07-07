@@ -1,4 +1,4 @@
-package group.aelysium.particulatebridge.lib.redis.messages;
+package group.aelysium.particulatebridge.lib.messager.redis.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

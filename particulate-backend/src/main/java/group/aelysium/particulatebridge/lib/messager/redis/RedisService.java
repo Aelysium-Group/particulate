@@ -1,7 +1,8 @@
-package group.aelysium.particulatebridge.lib.redis;
+package group.aelysium.particulatebridge.lib.messager.redis;
 
+import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
 import group.aelysium.particulatebridge.lib.model.Service;
-import group.aelysium.particulatebridge.lib.redis.messages.GenericRedisMessage;
+import group.aelysium.particulatebridge.lib.messager.redis.messages.GenericRedisMessage;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -88,7 +89,7 @@ public class RedisService extends Service {
         } catch (Exception ignore) {}
     }
 
-    public void publish(GenericRedisMessage message) {
+    public void publish(GenericMessage message) {
         this.publisher.publish(message);
     }
 

@@ -1,4 +1,4 @@
-package group.aelysium.particulatebridge.lib.redis;
+package group.aelysium.particulatebridge.lib.messager.redis;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.RedisURI;

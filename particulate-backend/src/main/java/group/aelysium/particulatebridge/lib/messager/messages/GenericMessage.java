@@ -1,4 +1,4 @@
-package group.aelysium.particulatebridge.lib.websocket.messages;
+package group.aelysium.particulatebridge.lib.messager.messages;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -9,22 +9,22 @@ import io.lettuce.core.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenericWebsocketMessage {
+public class GenericMessage {
     private final boolean sendable;
     private String rawMessage;
 
     private char[] authKey;
-    private final WebsocketMessageType.Mapping type;
+    private final MessageType.Mapping type;
 
     public boolean isSendable() { return this.sendable; }
     public String getRawMessage() { return this.rawMessage; }
     public char[] getAuthKey() { return this.authKey; }
-    public WebsocketMessageType.Mapping getType() { return this.type; }
+    public MessageType.Mapping getType() { return this.type; }
 
     /**
      * Builds a sendable
      */
-    protected GenericWebsocketMessage(WebsocketMessageType.Mapping type) {
+    protected GenericMessage(MessageType.Mapping type) {
         this.sendable = true;
         this.rawMessage = null;
         this.authKey = null;
@@ -34,7 +34,7 @@ public class GenericWebsocketMessage {
     /**
      * Builds a received
      */
-    protected GenericWebsocketMessage(String rawMessage, char[] authKey, WebsocketMessageType.Mapping type) {
+    protected GenericMessage(String rawMessage, char[] authKey, MessageType.Mapping type) {
         this.sendable = false;
         this.rawMessage = rawMessage;
         this.authKey = authKey;
@@ -88,7 +88,7 @@ public class GenericWebsocketMessage {
     public static class Builder {
         private String rawMessage;
         private char[] authKey;
-        private WebsocketMessageType.Mapping type;
+        private MessageType.Mapping type;
         private final List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
 
         public Builder() {}
@@ -110,7 +110,7 @@ public class GenericWebsocketMessage {
             this.authKey = authKey;
             return this;
         }
-        public Builder setType(WebsocketMessageType.Mapping type) {
+        public Builder setType(MessageType.Mapping type) {
             this.type = type;
             return this;
         }
@@ -139,8 +139,7 @@ public class GenericWebsocketMessage {
          * @return A RedisMessage that can be published.
          * @throws IllegalStateException If the required parameters are not provided.
          */
-        public GenericWebsocketMessage buildReceived() {
-            System.out.println(this.rawMessage);
+        public GenericMessage buildReceived() {
             if (this.rawMessage == null)
                 throw new IllegalStateException("You must provide `rawMessage` when building a receivable RedisMessage!");
             if (this.authKey == null)
@@ -148,7 +147,11 @@ public class GenericWebsocketMessage {
             if (this.type == null)
                 throw new IllegalStateException("You must provide `type` when building a receivable RedisMessage!");
 
-            return new GenericWebsocketMessage(this.rawMessage, this.authKey, this.type);
+            if(this.type == MessageType.CONTROL_DEMAND)     return new DemandMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.CONTROL_TOGGLE_ON)  return new DemandToggleOnMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.CONTROL_TOGGLE_OFF) return new DemandToggleOffMessage(this.rawMessage, this.authKey, this.parameters);
+
+            return null;
         }
 
         /**
@@ -162,10 +165,14 @@ public class GenericWebsocketMessage {
          * @return A message that can be published.
          * @throws IllegalStateException If the required parameters are not provided. Or if protocolVersion is attempted to be set.
          */
-        public GenericWebsocketMessage buildSendable() {
+        public GenericMessage buildSendable() {
             if(this.type == null) throw new IllegalStateException("You must provide `type` when building a sendable RedisMessage!");
 
-            return new GenericWebsocketMessage(this.type);
+            if(this.type == MessageType.CONTROL_DEMAND)     return new DemandMessage(this.parameters);
+            if(this.type == MessageType.CONTROL_TOGGLE_ON)  return new DemandToggleOnMessage(this.parameters);
+            if(this.type == MessageType.CONTROL_TOGGLE_OFF) return new DemandToggleOffMessage(this.parameters);
+
+            return null;
         }
     }
 
@@ -175,7 +182,8 @@ public class GenericWebsocketMessage {
          * @param rawMessage The raw message to parse.
          * @return A received RedisMessage.
          */
-        public GenericWebsocketMessage parseReceived(String rawMessage) {
+        public GenericMessage parseReceived(String rawMessage) {
+            System.out.println(rawMessage);
             Gson gson = new Gson();
             JsonObject messageObject = gson.fromJson(rawMessage, JsonObject.class);
 
@@ -188,7 +196,7 @@ public class GenericWebsocketMessage {
 
                 switch (key) {
                     case MasterValidParameters.AUTH_KEY -> redisMessageBuilder.setAuthKey(value.getAsString().toCharArray());
-                    case MasterValidParameters.TYPE -> redisMessageBuilder.setType(WebsocketMessageType.getMapping(value.getAsInt()));
+                    case MasterValidParameters.TYPE -> redisMessageBuilder.setType(MessageType.getMapping(value.getAsInt()));
                     case MasterValidParameters.PARAMETERS -> parseParams(value.getAsJsonObject(), redisMessageBuilder);
                 }
             });

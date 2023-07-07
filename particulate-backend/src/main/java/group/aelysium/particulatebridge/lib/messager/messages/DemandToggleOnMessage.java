@@ -7,7 +7,7 @@ import io.lettuce.core.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemandMessage extends GenericMessage {
+public class DemandToggleOnMessage extends GenericMessage {
     private String channelId;
     private int effectId;
 
@@ -18,10 +18,10 @@ public class DemandMessage extends GenericMessage {
         return effectId;
     }
 
-    public DemandMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_DEMAND);
+    public DemandToggleOnMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(MessageType.CONTROL_TOGGLE_ON);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -29,15 +29,15 @@ public class DemandMessage extends GenericMessage {
             JsonPrimitive value = entry.getValue();
 
             switch (key) {
-                case DemandToggleOnMessage.ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
-                case DemandToggleOnMessage.ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
+                case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
             }
         });
     }
-    public DemandMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_DEMAND);
+    public DemandToggleOnMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_ON);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -45,8 +45,8 @@ public class DemandMessage extends GenericMessage {
             JsonPrimitive value = entry.getValue();
 
             switch (key) {
-                case DemandToggleOnMessage.ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
-                case DemandToggleOnMessage.ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
+                case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
             }
         });
     }
@@ -57,7 +57,6 @@ public class DemandMessage extends GenericMessage {
         JsonObject parameters = new JsonObject();
 
         parameters.add(ValidParameters.CHANNEL_ID, new JsonPrimitive(this.channelId));
-        parameters.add(ValidParameters.EFFECT_ID, new JsonPrimitive(this.effectId));
 
         object.add(MasterValidParameters.PARAMETERS, parameters);
 
@@ -69,12 +68,12 @@ public class DemandMessage extends GenericMessage {
      * @param dataChannel The datachannel to target.
      * @return A DemandMessage.
      */
-    public static DemandMessage from(String dataChannel, int effectId) {
+    public static DemandToggleOnMessage from(String dataChannel, int effectId) {
         List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
-        parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(DemandToggleOffMessage.ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(DemandToggleOffMessage.ValidParameters.EFFECT_ID, new JsonPrimitive(effectId)));
 
-        return new DemandMessage(parameters);
+        return new DemandToggleOnMessage(parameters);
     }
 
     public interface ValidParameters {

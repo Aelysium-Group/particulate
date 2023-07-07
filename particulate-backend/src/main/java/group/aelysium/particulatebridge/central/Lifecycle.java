@@ -1,18 +1,20 @@
 package group.aelysium.particulatebridge.central;
 
-import group.aelysium.rustyconnector.core.lib.exception.DuplicateLifecycleException;
+import group.aelysium.particulatebridge.lib.exception.DuplicateLifecycleException;
 
-public abstract class PluginLifecycle {
+public class Lifecycle {
     protected boolean isRunning = false;
 
     public boolean isRunning() {
         return this.isRunning;
     }
 
-    public abstract boolean start() throws DuplicateLifecycleException;
-    public abstract void stop();
+    public boolean start() throws DuplicateLifecycleException {
+        return true;
+    }
+    public void stop() {}
 
-    protected abstract boolean loadConfigs();
-    protected abstract boolean loadCommands();
-    protected abstract boolean loadEvents();
+    protected boolean loadConfigs() {
+        return true;
+    }
 }

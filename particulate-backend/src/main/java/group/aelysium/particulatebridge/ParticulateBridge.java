@@ -1,18 +1,41 @@
 package group.aelysium.particulatebridge;
 
-import group.aelysium.particulatebridge.lib.websocket.WebsocketProviderService;
+import group.aelysium.particulatebridge.central.API;
+import group.aelysium.particulatebridge.central.Lifecycle;
+import group.aelysium.particulatebridge.lib.model.Serviceable;
+import group.aelysium.particulatebridge.lib.messager.websocket.WebsocketService;
+
+import java.util.HashMap;
 
 /**
  * Bridge the gap between the particulate control dashboard and Redis!
  */
-public class ParticulateBridge
-{
-    public static void main( String[] args ) {
-        System.out.println("helllo!");
+public class ParticulateBridge extends Serviceable {
+    private static Lifecycle lifecycle = new Lifecycle();
+    private static API api;
+    public static API getAPI() {
+        return api;
+    }
+    public static Lifecycle getLifecycle() {
+        return lifecycle;
+    }
+    public ParticulateBridge() {
+        super(new HashMap<>());
+    }
 
-        int port = 8887;
+    public void start() {
+        int port = 8080;
 
-        WebsocketProviderService server = new WebsocketProviderService(port);
-        server.run();
+        WebsocketService websocketService = new WebsocketService(port, "nathan".toCharArray());
+        this.services.put(WebsocketService.class, websocketService);
+        websocketService.getServer().run();
+    }
+
+    public static void main(String[] args ) {
+        ParticulateBridge particulateBridge = new ParticulateBridge();
+
+        api = new API(particulateBridge);
+
+        particulateBridge.start();
     }
 }

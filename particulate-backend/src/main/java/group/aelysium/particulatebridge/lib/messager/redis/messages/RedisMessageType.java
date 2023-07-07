@@ -1,4 +1,4 @@
-package group.aelysium.particulatebridge.lib.redis.messages;
+package group.aelysium.particulatebridge.lib.messager.redis.messages;
 
 import java.util.ArrayList;
 import java.util.List;

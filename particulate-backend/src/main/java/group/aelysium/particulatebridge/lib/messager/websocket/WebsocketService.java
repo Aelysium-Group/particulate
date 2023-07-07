@@ -1,8 +1,7 @@
-package group.aelysium.particulatebridge.lib.websocket;
+package group.aelysium.particulatebridge.lib.messager.websocket;
 
 import group.aelysium.particulatebridge.lib.model.Service;
-import group.aelysium.particulatebridge.lib.websocket.messages.GenericWebsocketMessage;
-import io.lettuce.core.pubsub.api.async.RedisPubSubAsyncCommands;
+import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
 
 import java.util.Arrays;
 
@@ -20,7 +19,7 @@ public class WebsocketService extends Service {
         return this.provider;
     }
 
-    public void publish(GenericWebsocketMessage message) {
+    public void publish(GenericMessage message) {
         this.provider.broadcast(message.toString());
     }
 

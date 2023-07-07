@@ -1,15 +1,17 @@
-package group.aelysium.particulatebridge.lib.messager.websocket.messages;
+package group.aelysium.particulatebridge.lib.messager.messages;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WebsocketMessageType {
+public class MessageType {
     public static Mapping RESPONSE_FAILURE = new Mapping(1, "RESPONSE_FAILURE");
     public static Mapping RESPONSE_SUCCESS = new Mapping(2, "RESPONSE_SUCCESS");
 
     public static Mapping LOGIN = new Mapping(100, "LOGIN");
 
     public static Mapping CONTROL_DEMAND = new Mapping(200, "CONTROL_DEMAND");
+    public static Mapping CONTROL_TOGGLE_ON = new Mapping(201, "CONTROL_TOGGLE_ON");
+    public static Mapping CONTROL_TOGGLE_OFF = new Mapping(202, "CONTROL_TOGGLE_OFF");
 
     public static List<Mapping> toList() {
         List<Mapping> list = new ArrayList<>();
@@ -17,6 +19,8 @@ public class WebsocketMessageType {
         list.add(RESPONSE_SUCCESS);
         list.add(LOGIN);
         list.add(CONTROL_DEMAND);
+        list.add(CONTROL_TOGGLE_ON);
+        list.add(CONTROL_TOGGLE_OFF);
 
         return list;
     }

@@ -1,18 +1,31 @@
-package group.aelysium.rustyconnector.core.central;
+package group.aelysium.particulatebridge.central;
+
+import group.aelysium.particulatebridge.ParticulateBridge;
+import group.aelysium.particulatebridge.lib.model.Service;
 
 import java.io.InputStream;
 
-public abstract class PluginAPI<S> {
+public class API {
+    protected final ParticulateBridge particulateBridge;
+
+    public API(ParticulateBridge particulateBridge) {
+        this.particulateBridge = particulateBridge;
+    }
+
     /**
      * Gets a resource by name and returns it as a stream.
      * @param filename The name of the resource to get.
      * @return The resource as a stream.
      */
-    abstract public InputStream getResourceAsStream(String filename);
+    public InputStream getResourceAsStream(String filename)  {
+        return getClass().getClassLoader().getResourceAsStream(filename);
+    }
 
-    abstract public S getScheduler();
+    public String getDataFolder() {
+        return "";
+    }
 
-    abstract public PluginLogger getLogger();
-
-    abstract public String getDataFolder();
+    public <S extends Service> S getService(Class<S> type) {
+        return this.particulateBridge.getService(type);
+    }
 }

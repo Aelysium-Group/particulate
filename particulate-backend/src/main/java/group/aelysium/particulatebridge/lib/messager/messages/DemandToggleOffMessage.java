@@ -7,7 +7,7 @@ import io.lettuce.core.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemandMessage extends GenericMessage {
+public class DemandToggleOffMessage extends GenericMessage {
     private String channelId;
     private int effectId;
 
@@ -18,10 +18,10 @@ public class DemandMessage extends GenericMessage {
         return effectId;
     }
 
-    public DemandMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_DEMAND);
+    public DemandToggleOffMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(MessageType.CONTROL_TOGGLE_OFF);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -34,10 +34,10 @@ public class DemandMessage extends GenericMessage {
             }
         });
     }
-    public DemandMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_DEMAND);
+    public DemandToggleOffMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_OFF);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -69,12 +69,12 @@ public class DemandMessage extends GenericMessage {
      * @param dataChannel The datachannel to target.
      * @return A DemandMessage.
      */
-    public static DemandMessage from(String dataChannel, int effectId) {
+    public static DemandToggleOffMessage from(String dataChannel, int effectId) {
         List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
         parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(effectId)));
 
-        return new DemandMessage(parameters);
+        return new DemandToggleOffMessage(parameters);
     }
 
     public interface ValidParameters {

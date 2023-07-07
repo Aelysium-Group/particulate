@@ -1,6 +1,7 @@
-package group.aelysium.particulatebridge.lib.redis;
+package group.aelysium.particulatebridge.lib.messager.redis;
 
-import group.aelysium.particulatebridge.lib.redis.messages.GenericRedisMessage;
+import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
+import group.aelysium.particulatebridge.lib.messager.redis.messages.GenericRedisMessage;
 import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisConnectionStateAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
@@ -31,8 +32,8 @@ public class RedisPublisher {
      * @param message The message to send.
      * @throws IllegalStateException If you attempt to send a received RedisMessage.
      */
-    public void publish(GenericRedisMessage message) {
-        if(!message.isSendable()) throw new IllegalStateException("Attempted to send a RedisMessage that isn't sendable!");
+    public void publish(GenericMessage message) {
+        if(!message.isSendable()) throw new IllegalStateException("Attempted to send a message that isn't sendable!");
 
         try {
             message.signMessage(client.getPrivateKey());

@@ -1,9 +1,8 @@
-package group.aelysium.particulatebridge.lib.websocket;
+package group.aelysium.particulatebridge.lib.messager.websocket;
 
 import group.aelysium.particulatebridge.ParticulateBridge;
 import group.aelysium.particulatebridge.central.API;
-import group.aelysium.particulatebridge.lib.websocket.messages.GenericWebsocketMessage;
-import group.aelysium.particulatebridge.lib.websocket.messages.variants.ResponseFailureWebsocketMessage;
+import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -29,8 +28,8 @@ public class WebsocketProvider extends WebSocketServer {
     @Override
     public void onMessage(WebSocket webSocket, String rawMessage) {
         API api = ParticulateBridge.getAPI();
-        GenericWebsocketMessage.Serializer serializer = new GenericWebsocketMessage.Serializer();
-        GenericWebsocketMessage message = serializer.parseReceived(rawMessage);
+        GenericMessage.Serializer serializer = new GenericMessage.Serializer();
+        GenericMessage message = serializer.parseReceived(rawMessage);
 
         try {
             if (!(api.getService(WebsocketService.class).validatePrivateKey(message.getAuthKey())))
@@ -38,8 +37,6 @@ public class WebsocketProvider extends WebSocketServer {
 
         } catch (Exception e) {
             e.printStackTrace();
-            ResponseFailureWebsocketMessage responseMessage = ResponseFailureWebsocketMessage.from(e.getMessage());
-            this.broadcast(responseMessage.toString());
         }
     }
 
