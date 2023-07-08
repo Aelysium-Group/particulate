@@ -13,14 +13,16 @@ export const ControlSelectInput = (props: ControlSelectInput) => {
     const [ ref, bounds ] = useMeasure();
 
     const render = () => {
-        const isClickButton     = props.value == ControlType.BUTTON_CLICK;
+        const isHoldButton      = props.value == ControlType.BUTTON_HOLD;
+        const isTapButton       = props.value == ControlType.BUTTON_TAP;
         const isToggleButton    = props.value == ControlType.BUTTON_TOGGLE;
         const isLabel           = props.value == ControlType.LABEL;
 
         const calculatedMiddle = (bounds.width * 0.5) - (124 * 0.5);
 
         let currentControlName = "Choose a control";
-        if(isClickButton)       currentControlName = "Button (Click)";
+        if(isHoldButton)        currentControlName = "Button (Hold)";
+        if(isTapButton)         currentControlName = "Button (Click)";
         if(isToggleButton)      currentControlName = "Button (Toggle)";
         if(isLabel)             currentControlName = "Text Label";
 
@@ -31,15 +33,15 @@ export const ControlSelectInput = (props: ControlSelectInput) => {
                 </div>
                 <div className="relative h-75px"/>
                 <motion.div
-                    className={`absolute overflow-hidden ${!isClickButton ? "cursor-pointer" : ""}`}
+                    className={`absolute overflow-hidden ${!isHoldButton ? "cursor-pointer" : ""}`}
                     animate={{
-                        left: isClickButton ? calculatedMiddle : 8,
-                        bottom: isClickButton ? 115 : -25,
-                        scale: isClickButton ? 1 : 0.5
+                        left: isHoldButton ? calculatedMiddle : 8,
+                        bottom: isHoldButton ? 115 : -25,
+                        scale: isHoldButton ? 1 : 0.5
                     }}
                     transition={{ type: "spring", stiffness: 400, damping: 12 }}
-                    onTapStart={() => props.onChange(ControlType.BUTTON_CLICK)}
-                    whileHover={{ scale: isClickButton ? 1 : 0.6 }}
+                    onTapStart={() => props.onChange(ControlType.BUTTON_HOLD)}
+                    whileHover={{ scale: isHoldButton ? 1 : 0.6 }}
                     whileTap={{ scale: 1 }}
                     >
                     <div className={`relative rounded-3xl w-100px m-12px aspect-square overflow-hidden`} >
@@ -50,9 +52,28 @@ export const ControlSelectInput = (props: ControlSelectInput) => {
                     </div>
                 </motion.div>
                 <motion.div
+                    className={`absolute overflow-hidden ${!isTapButton ? "cursor-pointer" : ""}`}
+                    animate={{
+                        left: isTapButton ? calculatedMiddle : 100,
+                        bottom: isTapButton ? 115 : -25,
+                        scale: isTapButton ? 1 : 0.5
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 12 }}
+                    onTapStart={() => props.onChange(ControlType.BUTTON_TAP)}
+                    whileHover={{ scale: isTapButton ? 1 : 0.6 }}
+                    whileTap={{ scale: 1 }}
+                    >
+                    <div className={`relative rounded-full w-100px m-12px aspect-square overflow-hidden`} >
+                        <div
+                            className={`absolute inset-0 w-full aspect-square shadow-inset-xl duration-200`}
+                            style={{ background: props.color ?? InterfaceColor.RED }}
+                            />
+                    </div>
+                </motion.div>
+                <motion.div
                     className={`absolute overflow-hidden ${!isToggleButton ? "cursor-pointer" : ""}`}
                     animate={{
-                        left: isToggleButton ? calculatedMiddle : 100,
+                        left: isToggleButton ? calculatedMiddle : 200,
                         bottom: isToggleButton ? 115 : -25,
                         scale: isToggleButton ? 1 : 0.5
                     }}
@@ -71,7 +92,7 @@ export const ControlSelectInput = (props: ControlSelectInput) => {
                 <motion.div
                     className={`absolute overflow-hidden ${!isLabel ? "cursor-pointer" : ""}`}
                     animate={{
-                        left: isLabel ? calculatedMiddle : 200,
+                        left: isLabel ? calculatedMiddle : 300,
                         bottom: isLabel ? 140 : 0,
                         scale: isLabel ? 1 : 0.5
                     }}

@@ -19,7 +19,7 @@ public class DemandMessage extends GenericMessage {
     }
 
     public DemandMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_DEMAND);
+        super(MessageType.DEMAND_PING);
 
         if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
@@ -35,7 +35,7 @@ public class DemandMessage extends GenericMessage {
         });
     }
     public DemandMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_DEMAND);
+        super(rawMessage, authKey, MessageType.DEMAND_PING);
 
         if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
@@ -72,7 +72,7 @@ public class DemandMessage extends GenericMessage {
     public static DemandMessage from(String dataChannel, int effectId) {
         List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
         parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(effectId)));
 
         return new DemandMessage(parameters);
     }

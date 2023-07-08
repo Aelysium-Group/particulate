@@ -17,6 +17,10 @@ public class RunnerQueueService extends Service {
         this.emitterCommand.remove(new MappingEntry(cluster, effect));
     }
 
+    public void clear() {
+        this.emitterCommand.clear();
+    }
+
     public Vector<MappingEntry> dump() {
         return this.emitterCommand;
     }

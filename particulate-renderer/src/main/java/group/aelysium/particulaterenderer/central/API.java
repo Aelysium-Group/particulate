@@ -3,6 +3,7 @@ package group.aelysium.particulaterenderer.central;
 import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator;
 import cloud.commandframework.paper.PaperCommandManager;
 import group.aelysium.particulaterenderer.ParticulateRenderer;
+import group.aelysium.particulaterenderer.lib.EffectRenderService;
 import group.aelysium.particulaterenderer.lib.EffectService;
 import group.aelysium.particulaterenderer.lib.EmitterService;
 import group.aelysium.particulaterenderer.lib.RunnerQueueService;
@@ -32,6 +33,8 @@ public class API extends Serviceable {
         this.services.put(EmitterService.class, new EmitterService());
         this.services.put(EffectService.class, new EffectService());
         this.services.put(RunnerQueueService.class, new RunnerQueueService());
+        this.services.put(EffectRenderService.class, new EffectRenderService());
+        this.getService(EffectRenderService.class).start();
 
         this.plugin = plugin;
         this.pluginLogger = new PluginLogger(logger);

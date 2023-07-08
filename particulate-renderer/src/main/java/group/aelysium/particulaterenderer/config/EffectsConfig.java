@@ -4,14 +4,18 @@ import group.aelysium.particulaterenderer.ParticulateRenderer;
 import group.aelysium.particulaterenderer.central.API;
 import group.aelysium.particulaterenderer.lib.EffectService;
 import group.aelysium.particulaterenderer.lib.effects.*;
+import group.aelysium.particulaterenderer.lib.effects.Effect;
 import group.aelysium.particulaterenderer.lib.effects.FireworkEffect;
 import group.aelysium.particulaterenderer.lib.model.ColorParser;
 import group.aelysium.particulaterenderer.lib.model.DeltaLocation;
 import org.bukkit.*;
 import org.bukkit.potion.PotionEffectType;
+import org.spongepowered.configurate.ConfigurationNode;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EffectsConfig extends YAML {
     private static EffectsConfig config;
@@ -49,16 +53,23 @@ public class EffectsConfig extends YAML {
         API api = ParticulateRenderer.getAPI();
         EffectService service = api.getService(EffectService.class);
 
+        Map<Integer, ConfigurationNode> scenes = new HashMap<>();
+
         get(this.data,"effects").childrenMap().forEach((key, value) -> {
             String type = this.getNode(value, "type", String.class);
             try {
                 switch (type) {
                     case "PARTICLE" -> {
-                            DeltaLocation delta = new DeltaLocation(
-                                    this.getNode(value, "dx", Double.class),
-                                    this.getNode(value, "dy", Double.class),
-                                    this.getNode(value, "dz", Double.class)
-                            );
+                            DeltaLocation delta;
+                            try {
+                                delta = new DeltaLocation(
+                                        this.getNode(value, "dx", Double.class),
+                                        this.getNode(value, "dy", Double.class),
+                                        this.getNode(value, "dz", Double.class)
+                                );
+                            } catch (Exception ignore) {
+                                delta = new DeltaLocation(0.0,0.0,0.0);
+                            }
 
                             ParticleEffect particleEffect = new ParticleEffect.Builder()
                                     .setId((int) key)
@@ -157,8 +168,43 @@ public class EffectsConfig extends YAML {
 
                         service.add(potionBuilder.build());
                     }
+                    case "SCENE" -> {
+                        scenes.put((int) key, value);
+                    }
                 }
-            } catch (Throwable ignore) {}
+            } catch (Throwable e) {
+                api.getLogger().log("Failed to load an effect!");
+                e.printStackTrace();
+            }
+        });
+
+        // Process scenes now that all effects are loaded
+
+        scenes.forEach((key, value) -> {
+            SceneEffect.Builder sceneBuilder = new SceneEffect.Builder()
+                    .setId(key);
+
+            YAML.get(value, "effects").childrenList().forEach(entry -> {
+                try {
+                    System.out.println(entry);
+                    int effectId = entry.getInt();
+                    System.out.println(effectId);
+                    Effect effect = service.find(effectId).orElseThrow();
+
+                    sceneBuilder.addEffect(effect);
+                } catch (Exception ignore) {
+                    api.getLogger().log("Failed to load the scene "+ key);
+                }
+            });
+
+            try {
+                service.add(sceneBuilder.build());
+            } catch (Throwable e) {
+                api.getLogger().log("Failed to load scene "+key);
+                e.printStackTrace();
+            }
+
+            api.getLogger().log("Registered scene "+key);
         });
     }
 }

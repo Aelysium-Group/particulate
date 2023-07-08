@@ -7,7 +7,7 @@ import { InterfaceColor } from '../../resources/InterfaceColor';
 import { useLog } from '../../hooks/useLog';
 import { ButtonInput } from '../input/ButtonInput';
 import { ControlSelectInput } from '../input/ControlSelectInput';
-import { throw_createNewElementEvent } from '../../events/events';
+import { throw_createNewElementEvent, throw_event } from '../../events/events';
 import { motion } from 'framer-motion';
 import { ControlType } from '../generic/controls/Control';
 
@@ -16,12 +16,14 @@ export const CreateElementPopup = () => {
 
     const [ active, setActive ] = useState(false);
     const [ position, setPosition ] = useState({x: 0, y: 0});
-    const [ channelID, setChannelID ]: [ any, Function ] = useState("");
+    const [ channelID, setChannelID ]: [ string, Function ] = useState("");
+    const [ effectID, setEffectID ]: [ number, Function ] = useState(-1);
     const [ color, setColor ]: [ any, Function ] = useState(undefined);
-    const [ type, setType ]: [ any, Function ] = useState(undefined);
+    const [ type, setType ]: [ ControlType, Function ] = useState(undefined);
 
     const unset = () => {
         setChannelID("");
+        setEffectID(-1);
         setColor(undefined);
         setType(undefined);
     }
@@ -32,8 +34,10 @@ export const CreateElementPopup = () => {
         if(finalColor == undefined) finalColor = InterfaceColor.RED;
         if(channelID == "") 
             if(type != ControlType.LABEL) return log.add.error("You must set a channelID!");
+        if(effectID == -1) 
+            if(type != ControlType.LABEL) return log.add.error("You must set an effectID!");
 
-        throw_createNewElementEvent(type, channelID, finalColor, position);
+        throw_createNewElementEvent(type, channelID, effectID, finalColor, position);
     }
 
     useEffect(() => {
@@ -61,8 +65,10 @@ export const CreateElementPopup = () => {
                 animate={{ scale: type == ControlType.LABEL ? 0 : 1}}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-                <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-50px duration-300' style={{color: color}}>FX Channel ID</span>
+                <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-50px duration-300' style={{color: color}}>Channel ID</span>
                 <TextInput onChange={(value: string) => setChannelID(value)} value={channelID} placeholder='Enter a Channel ID' />
+                <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-50px duration-300' style={{color: color}}>Effect ID</span>
+                <TextInput onChange={(value: string) => setEffectID(value)} value={effectID} placeholder='Enter a Channel ID' />
             </motion.div>
             <ButtonInput
                 onClick={() => submit()}

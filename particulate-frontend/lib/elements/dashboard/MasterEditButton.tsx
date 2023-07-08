@@ -13,7 +13,7 @@ export const MasterEditButton = (props: MasterEditButton) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            onTap={() => {props.onClick();throw_closeContextMenuEvent();}}
+            onTap={() => {props.onClick(); throw_closeContextMenuEvent();}}
             >
             <Icon className="w-30px m-10px aspect-square opacity-90" iconName={IconName.EDIT} />
         </motion.div>
@@ -25,7 +25,7 @@ export const MasterEditButton = (props: MasterEditButton) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            onTap={() => {props.onClick();throw_closeContextMenuEvent();}}>
+            onTap={() => {props.onClick(); throw_closeContextMenuEvent();}}>
             <Icon className="w-30px m-10px aspect-square opacity-90 invert" iconName={IconName.EDIT} />
         </motion.div>
     );

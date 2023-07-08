@@ -18,7 +18,7 @@ export const PopUp = (props: PopUp) => {
     const view_desktop = () => (
         <motion.div className={`fixed left-0 w-screen h-screen z-50`}
             initial={{top: window.innerHeight}}
-            animate={{top: props.isVisible ? 0 : window.innerHeight}}
+            animate={{top: props.isVisible ? 0 : window.innerHeight * 1.5}}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
             <div className='relative w-screen h-screen pb-100px'>

@@ -2,7 +2,6 @@ package group.aelysium.particulatebridge.lib.messager.redis;
 
 import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
 import group.aelysium.particulatebridge.lib.model.Service;
-import group.aelysium.particulatebridge.lib.messager.redis.messages.GenericRedisMessage;
 
 import java.util.Arrays;
 import java.util.Iterator;

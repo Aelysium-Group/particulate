@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import group.aelysium.particulaterenderer.lib.redis.messages.variants.DemandKillAllMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.variants.DemandPingMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.variants.DemandToggleOffMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.variants.DemandToggleOnMessage;
 import io.lettuce.core.KeyValue;
 
 import java.util.ArrayList;
@@ -141,6 +145,7 @@ public class GenericMessage {
          */
         public GenericMessage buildReceived() {
             System.out.println(this.rawMessage);
+
             if (this.rawMessage == null)
                 throw new IllegalStateException("You must provide `rawMessage` when building a receivable RedisMessage!");
             if (this.authKey == null)
@@ -148,24 +153,12 @@ public class GenericMessage {
             if (this.type == null)
                 throw new IllegalStateException("You must provide `type` when building a receivable RedisMessage!");
 
+            if (this.type == MessageType.DEMAND_PING)        return new DemandPingMessage(this.rawMessage, this.authKey, this.parameters);
+            if (this.type == MessageType.DEMAND_TOGGLE_ON)     return new DemandToggleOnMessage(this.rawMessage, this.authKey, this.parameters);
+            if (this.type == MessageType.DEMAND_TOGGLE_OFF)    return new DemandToggleOffMessage(this.rawMessage, this.authKey, this.parameters);
+            if (this.type == MessageType.DEMAND_KILL_ALL)      return new DemandKillAllMessage(this.rawMessage, this.authKey);
+
             return new GenericMessage(this.rawMessage, this.authKey, this.type);
-        }
-
-        /**
-         * Build a message which can be sent via the RedisPublisher.
-         * <p>
-         * ## Required Parameters:
-         * - `type`
-         * <p>
-         * ## Not Allowed Parameters:
-         * - `protocolVersion`
-         * @return A message that can be published.
-         * @throws IllegalStateException If the required parameters are not provided. Or if protocolVersion is attempted to be set.
-         */
-        public GenericMessage buildSendable() {
-            if(this.type == null) throw new IllegalStateException("You must provide `type` when building a sendable RedisMessage!");
-
-            return new GenericMessage(this.type);
         }
     }
 
@@ -179,21 +172,21 @@ public class GenericMessage {
             Gson gson = new Gson();
             JsonObject messageObject = gson.fromJson(rawMessage, JsonObject.class);
 
-            Builder redisMessageBuilder = new Builder();
-            redisMessageBuilder.setRawMessage(rawMessage);
+            Builder messageBuilder = new Builder();
+            messageBuilder.setRawMessage(rawMessage);
 
             messageObject.entrySet().forEach(entry -> {
                 String key = entry.getKey();
                 JsonElement value = entry.getValue();
 
                 switch (key) {
-                    case MasterValidParameters.AUTH_KEY -> redisMessageBuilder.setAuthKey(value.getAsString().toCharArray());
-                    case MasterValidParameters.TYPE -> redisMessageBuilder.setType(MessageType.getMapping(value.getAsInt()));
-                    case MasterValidParameters.PARAMETERS -> parseParams(value.getAsJsonObject(), redisMessageBuilder);
+                    case MasterValidParameters.AUTH_KEY -> messageBuilder.setAuthKey(value.getAsString().toCharArray());
+                    case MasterValidParameters.TYPE -> messageBuilder.setType(MessageType.getMapping(value.getAsInt()));
+                    case MasterValidParameters.PARAMETERS -> parseParams(value.getAsJsonObject(), messageBuilder);
                 }
             });
 
-            return redisMessageBuilder.buildReceived();
+            return messageBuilder.buildReceived();
         }
 
         private void parseParams(JsonObject object, Builder redisMessageBuilder) {

@@ -9,10 +9,7 @@ import { PasswordInput } from '../input/PasswordInput';
 import { ConnectionResolvable } from '../../session/ConnectionResolvable';
 import { URIBuilder } from '../../websocket-provider/providers/URIBuilder';
 import { StandardProtocol } from '../../websocket-provider/interfaces/StandardProtocol';
-import { usePromise } from '../../hooks/usePromise';
 import { Client } from '../../session/Client';
-import { WebsocketMessage } from '../../websocket-provider/message/WebsocketMessage';
-import { MessageType } from '../../websocket-provider/message/MessageType';
 
 export const LoginPopup = () => {
     const log = useLog();
@@ -20,8 +17,7 @@ export const LoginPopup = () => {
     const [ active, setActive ] = useState(false);
     const [ address, setAddress ] = useState("127.0.0.1");
     const [ port, setPort ] = useState(8080);
-    const [ username, setUsername ] = useState("");
-    const [ password, setPassword ] = useState("");
+    const [ publicKey, setPublicKey ] = useState("");
 
     const unset = () => {
         setAddress("127.0.0.1");
@@ -29,8 +25,7 @@ export const LoginPopup = () => {
     }
 
     const submit = async () => {
-        if(username == "")   return log.add.error("Please provide a username to authenticate with.");
-        if(password == "")   return log.add.error("Please provide a password to authenticate with.");
+        if(publicKey == "")   return log.add.error("Please provide a public key to authenticate with.");
 
         try {
             const URI = new URIBuilder()
@@ -38,10 +33,12 @@ export const LoginPopup = () => {
                             .setPort(port)
                             .setProtocol(StandardProtocol.WS);
     
-            const resolvable = new ConnectionResolvable(URI, null, username, password);
+            const resolvable = new ConnectionResolvable(URI, publicKey);
             const socket = await resolvable.resolve();
     
             if(!socket) throw new Error("Unable to connect to the remote host!");
+
+            Client.remapInstance(publicKey);
 
             Client.instance.socket = socket
         } catch(error) {
@@ -53,6 +50,7 @@ export const LoginPopup = () => {
         document.addEventListener(EventName.OpenLoginPopup,() => {setActive(true); });
         document.addEventListener(EventName.CloseLoginPopup,() => {setActive(false); unset();});
         return () => {
+            if(Client.instance.socket != null) Client.instance.socket.kill();
             document.removeEventListener(EventName.OpenLoginPopup,() => {setActive(true);});
             document.removeEventListener(EventName.CloseLoginPopup,() => {setActive(false); unset();});
         }
@@ -81,10 +79,8 @@ export const LoginPopup = () => {
             <span className='block text-center font-bold text-4xl z-10 select-none text-blue-500 mb-20px mt-80px'>
                 Authentication
             </span>
-            <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-20px'>Username</span>
-            <TextInput onChange={(value: string) => setUsername(value)} value={username} placeholder='Enter a username' />
-            <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-20px'>Password</span>
-            <PasswordInput onChange={(value: string) => setPassword(value)} value={password} placeholder='Enter a password' />
+            <span className='block text-left font-bold text-2xl z-10 select-none text-blue-500 mb-5px mt-20px'>Key</span>
+            <PasswordInput onChange={(value: string) => setPublicKey(value)} value={publicKey} placeholder='Enter a key' />
             <ButtonInput
                 onClick={() => submit()}
                 title='Login >>>'

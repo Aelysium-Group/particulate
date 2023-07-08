@@ -11,19 +11,24 @@ import { LightBar } from './elements/LightBar';
 import { Control, ControlType, ParseableControlObject } from './elements/generic/controls/Control';
 import { AppLog } from './elements/log/AppLog';
 import { throw_lightBarColorUpdate, throw_event } from './events/events';
-import { DButtonClick } from './elements/dashboard/DButtonClick';
+import { DButtonTap } from './elements/dashboard/DButtonTap';
 import { DButtonToggle } from './elements/dashboard/DButtonToggle';
 import { useLog } from './hooks/useLog';
 import { AnimatePresence } from 'framer-motion';
 import { DLabel } from './elements/dashboard/DLabel';
 import { LoginPopup } from './elements/popups/LoginPopup';
+import { Client } from './session/Client';
+import { LoadingCircle } from './elements/LoadingCircle';
+import { DButtonHold } from './elements/dashboard/DButtonHold';
 
 const editingContextMenu = [
     new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
+    new Option(IconName.EDIT, 'Toggle Edit Mode', EventName.ToggleEditMode, "", true),
 ];
 
 const liveContextMenu = [
     new Option(IconName.STOP, 'Stop All Effects', EventName.ContextMenuOption_StopEffects, "", false),
+    new Option(IconName.EDIT, 'Toggle Edit Mode', EventName.ToggleEditMode, "", true),
 ];
 
 export const App = () => {
@@ -50,32 +55,26 @@ export const App = () => {
 
     const toggleEditMode = () => {
         if(editMode) {
-            throw_event(EventName.ExitControlEditMode);
             setEditMode(false);
         } else {
-            throw_event(EventName.EnterControlEditMode);
             setEditMode(true);
         }
     }
 
     useEffect(()=>{
-        document.addEventListener(EventName.LogAppError,(e: any) => log.add.error(e.detail));
-        document.addEventListener(EventName.LogAppMessage,(e: any) => log.add.message(e.detail));
-        document.addEventListener(EventName.LogAppSuccess,(e: any) => log.add.confirm(e.detail));
-        document.addEventListener(EventName.ContextMenuOption_StopEffects,stopEffects);
+        document.addEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
         document.addEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
         document.addEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
+        document.addEventListener(EventName.ToggleEditMode, toggleEditMode);
 
-        throw_event(EventName.OpenLoginPopup);
+        if(Client.instance == null || Client.instance.socket == null) throw_event(EventName.OpenLoginPopup);
         return () => {
-            document.removeEventListener(EventName.LogAppError,(e: any) => log.add.error(e.detail));
-            document.removeEventListener(EventName.LogAppMessage,(e: any) => log.add.message(e.detail));
-            document.removeEventListener(EventName.LogAppSuccess,(e: any) => log.add.confirm(e.detail));
             document.removeEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
             document.removeEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
             document.removeEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
+            document.removeEventListener(EventName.ToggleEditMode, toggleEditMode);
         }
-    },[controls]);
+    },[controls, editMode]);
 
     const view_default = () => {
         return (
@@ -92,6 +91,7 @@ export const App = () => {
                                     {editMode ? " Editor" : " Controller"}
                                 </span>
                         </span>
+                        <LoadingCircle />
                         <div className='absolute top-[120px] left-0 w-screen'>
                             <LightBar catchId='main' defaultColor={editMode ? "bg-blue-500" : "bg-amber-500"}/>
                         </div>
@@ -103,8 +103,9 @@ export const App = () => {
                         <div className="z-10" draggable={false}>
                             <AnimatePresence>
                                 {controls.map((item: Control) => {
-                                    if(item.type == ControlType.BUTTON_CLICK)   return (<DButtonClick  key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
-                                    if(item.type == ControlType.BUTTON_TOGGLE)  return (<DButtonToggle key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_TAP)     return (<DButtonTap    key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_HOLD)    return (<DButtonHold   key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_TOGGLE)  return (<DButtonToggle key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
                                     if(item.type == ControlType.LABEL)          return (<DLabel        key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
                                 })}
                             </AnimatePresence>

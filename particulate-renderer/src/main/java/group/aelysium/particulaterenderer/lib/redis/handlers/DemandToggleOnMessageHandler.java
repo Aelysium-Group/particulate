@@ -8,13 +8,13 @@ import group.aelysium.particulaterenderer.lib.EmitterService;
 import group.aelysium.particulaterenderer.lib.RunnerQueueService;
 import group.aelysium.particulaterenderer.lib.effects.Effect;
 import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
-import group.aelysium.particulaterenderer.lib.redis.messages.variants.ToggleOnMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.variants.DemandToggleOnMessage;
 
 public class DemandToggleOnMessageHandler implements Runnable {
-    private final ToggleOnMessage message;
+    private final DemandToggleOnMessage message;
 
     public DemandToggleOnMessageHandler(GenericMessage message) {
-        this.message = (ToggleOnMessage) message;
+        this.message = (DemandToggleOnMessage) message;
     }
 
     @Override

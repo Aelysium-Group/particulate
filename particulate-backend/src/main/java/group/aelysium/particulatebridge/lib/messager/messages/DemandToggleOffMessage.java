@@ -19,7 +19,7 @@ public class DemandToggleOffMessage extends GenericMessage {
     }
 
     public DemandToggleOffMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_TOGGLE_OFF);
+        super(MessageType.DEMAND_TOGGLE_OFF);
 
         if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
@@ -35,7 +35,7 @@ public class DemandToggleOffMessage extends GenericMessage {
         });
     }
     public DemandToggleOffMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_OFF);
+        super(rawMessage, authKey, MessageType.DEMAND_TOGGLE_OFF);
 
         if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");

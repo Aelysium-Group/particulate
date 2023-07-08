@@ -1,4 +1,4 @@
-package group.aelysium.rustyconnector.core.lib.model;
+package group.aelysium.particulaterenderer.lib.model;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -8,9 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class ClockService extends Service {
     protected final ScheduledExecutorService executorService;
 
-    public ClockService(boolean enabled, int threads) {
-        super(enabled);
-
+    public ClockService(int threads) {
         this.executorService = Executors.newScheduledThreadPool(threads);
     }
 

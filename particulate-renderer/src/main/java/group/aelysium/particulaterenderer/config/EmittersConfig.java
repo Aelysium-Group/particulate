@@ -5,9 +5,11 @@ import group.aelysium.particulaterenderer.central.API;
 import group.aelysium.particulaterenderer.lib.EmitterCluster;
 import group.aelysium.particulaterenderer.lib.EmitterService;
 import group.aelysium.particulaterenderer.lib.LocationParser;
+import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 
 public class EmittersConfig extends YAML {
     private static EmittersConfig config;
@@ -48,14 +50,11 @@ public class EmittersConfig extends YAML {
         get(this.data,"emitters").childrenList().forEach(item -> {
             EmitterCluster cluster = new EmitterCluster(this.getNode(item, "effect-channel", String.class));
 
-            List<String> locations = this.getNode(item, "locations", List.class);
-            for (String location : locations) {
+            YAML.get(item,"locations").childrenList().forEach(location -> {
                 try {
-                    cluster.add(LocationParser.from(location));
-                } catch (Exception ignore) {
-
-                }
-            }
+                    cluster.add(LocationParser.from(Objects.requireNonNull(location.getString())));
+                } catch (Exception ignore) {}
+            });
 
             service.add(cluster);
         });

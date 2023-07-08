@@ -10,5 +10,6 @@ export const PasswordInput = (props: PasswordInput) => (
         value={props.value}
         onChange={(event) => props.onChange(event.target.value)}
         placeholder={props.placeholder ?? ''}
+        onPointerDownCapture={e => e.stopPropagation()}
         />
 );

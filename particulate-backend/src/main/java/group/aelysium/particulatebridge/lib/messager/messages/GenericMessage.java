@@ -147,9 +147,10 @@ public class GenericMessage {
             if (this.type == null)
                 throw new IllegalStateException("You must provide `type` when building a receivable RedisMessage!");
 
-            if(this.type == MessageType.CONTROL_DEMAND)     return new DemandMessage(this.rawMessage, this.authKey, this.parameters);
-            if(this.type == MessageType.CONTROL_TOGGLE_ON)  return new DemandToggleOnMessage(this.rawMessage, this.authKey, this.parameters);
-            if(this.type == MessageType.CONTROL_TOGGLE_OFF) return new DemandToggleOffMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.DEMAND_PING)       return new DemandMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.DEMAND_TOGGLE_ON)  return new DemandToggleOnMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.DEMAND_TOGGLE_OFF) return new DemandToggleOffMessage(this.rawMessage, this.authKey, this.parameters);
+            if(this.type == MessageType.DEMAND_KILL_ALL)   return new DemandKillAllMessage(this.rawMessage, this.authKey);
 
             return null;
         }
@@ -168,9 +169,10 @@ public class GenericMessage {
         public GenericMessage buildSendable() {
             if(this.type == null) throw new IllegalStateException("You must provide `type` when building a sendable RedisMessage!");
 
-            if(this.type == MessageType.CONTROL_DEMAND)     return new DemandMessage(this.parameters);
-            if(this.type == MessageType.CONTROL_TOGGLE_ON)  return new DemandToggleOnMessage(this.parameters);
-            if(this.type == MessageType.CONTROL_TOGGLE_OFF) return new DemandToggleOffMessage(this.parameters);
+            if(this.type == MessageType.DEMAND_PING)       return new DemandMessage(this.parameters);
+            if(this.type == MessageType.DEMAND_TOGGLE_ON)  return new DemandToggleOnMessage(this.parameters);
+            if(this.type == MessageType.DEMAND_TOGGLE_OFF) return new DemandToggleOffMessage(this.parameters);
+            if(this.type == MessageType.DEMAND_KILL_ALL)   return new DemandKillAllMessage();
 
             return null;
         }

@@ -24,8 +24,8 @@ export const throw_closeContextMenuEvent = () => {
     document.dispatchEvent(event);
 }
 
-export const throw_createNewElementEvent = (type: string, channelID: string, color: string, position: Position) => {
-    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, color, position} as ParseableControlObject });
+export const throw_createNewElementEvent = (type: string, channelID: string, effectID: number, color: string, position: Position) => {
+    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, effectID, color, position} as ParseableControlObject });
     document.dispatchEvent(event);
 }
 
@@ -36,5 +36,18 @@ export const throw_transportLogMessagesEvent = (messages: LogMessages) => {
 
 export const throw_genericEventFromContextMenu = (eventName: EventName, target: Position, details: Object) => {
     const event = new CustomEvent(eventName, {detail: { target, details }});
+    document.dispatchEvent(event);
+}
+
+export const throw_sendDemandMessage = (channelID: string, effectID: number) => {
+    const event = new CustomEvent(EventName.DispatchDemandMessage, {detail: { channelID, effectID }});
+    document.dispatchEvent(event);
+}
+export const throw_sendDemandToggleOnMessage = (channelID: string, effectID: number) => {
+    const event = new CustomEvent(EventName.DispatchDemandToggleOnMessage, {detail: { channelID, effectID }});
+    document.dispatchEvent(event);
+}
+export const throw_sendDemandToggleOffMessage = (channelID: string, effectID: number) => {
+    const event = new CustomEvent(EventName.DispatchDemandToggleOffMessage, {detail: { channelID, effectID }});
     document.dispatchEvent(event);
 }

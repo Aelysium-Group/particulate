@@ -1,18 +1,15 @@
-package group.aelysium.particulatebridge.lib.messager.messages;
+package group.aelysium.particulaterenderer.lib.redis.messages.variants;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import io.lettuce.core.KeyValue;
-
-import java.util.ArrayList;
-import java.util.List;
+import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.MessageType;
 
 public class DemandKillAllMessage extends GenericMessage {
     public DemandKillAllMessage() {
-        super(MessageType.CONTROL_KILL_ALL);
+        super(MessageType.DEMAND_KILL_ALL);
     }
     public DemandKillAllMessage(String rawMessage, char[] authKey) {
-        super(rawMessage, authKey, MessageType.CONTROL_KILL_ALL);
+        super(rawMessage, authKey, MessageType.DEMAND_KILL_ALL);
     }
 
     @Override

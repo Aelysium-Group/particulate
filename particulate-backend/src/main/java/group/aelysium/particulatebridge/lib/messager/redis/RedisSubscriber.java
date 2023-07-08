@@ -58,7 +58,7 @@ public class RedisSubscriber {
      * Called by `.subscribeToChannel()` when a message is received over the data channel.
      * @param rawMessage The message received.
      */
-    protected void onMessage(String rawMessage) {
+    public void onMessage(String rawMessage) {
         System.out.println(rawMessage);
     }
 

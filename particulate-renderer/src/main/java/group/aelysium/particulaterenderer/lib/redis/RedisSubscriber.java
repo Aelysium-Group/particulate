@@ -1,11 +1,20 @@
 package group.aelysium.particulaterenderer.lib.redis;
 
+import group.aelysium.particulaterenderer.ParticulateRenderer;
+import group.aelysium.particulaterenderer.central.API;
+import group.aelysium.particulaterenderer.lib.redis.handlers.DemandKillAllMessageHandler;
+import group.aelysium.particulaterenderer.lib.redis.handlers.DemandPingMessageHandler;
+import group.aelysium.particulaterenderer.lib.redis.handlers.DemandToggleOffMessageHandler;
+import group.aelysium.particulaterenderer.lib.redis.handlers.DemandToggleOnMessageHandler;
+import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
+import group.aelysium.particulaterenderer.lib.redis.messages.MessageType;
 import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisConnectionStateAdapter;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
 
+import javax.naming.AuthenticationException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -59,12 +68,27 @@ public class RedisSubscriber {
      * @param rawMessage The message received.
      */
     protected void onMessage(String rawMessage) {
-        // Empty adapter method
+        API api = ParticulateRenderer.getAPI();
+        try {
+            GenericMessage.Serializer serializer = new GenericMessage.Serializer();
+            GenericMessage message = serializer.parseReceived(rawMessage);
+
+            if (!(api.getService(RedisService.class).validatePrivateKey(message.getAuthKey())))
+                throw new AuthenticationException("This message has an invalid private key!");
+
+            if(message.getType() == MessageType.DEMAND_PING)       new DemandPingMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_TOGGLE_ON)  new DemandToggleOnMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_TOGGLE_OFF) new DemandToggleOffMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_KILL_ALL)   new DemandKillAllMessageHandler(message).run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected class RedisMessageListener extends RedisPubSubAdapter<String, String> {
         @Override
         public void message(String channel, String rawMessage) {
+            RedisSubscriber.this.onMessage(rawMessage);
         }
     }
 

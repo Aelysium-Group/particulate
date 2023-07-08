@@ -9,7 +9,9 @@ import { ContextLaunchingDiv } from "../context/ContextLaunchingDiv";
 import { Option } from "../context/ContextMenuOption";
 
 const editingButton = [
+    new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
     new Option(IconName.TRASH, 'Delete Label', EventName.DeleteControl, "", false),
+    new Option(IconName.EDIT, 'Toggle Edit Mode', EventName.ToggleEditMode, "", true),
 ];
 
 const calcNewTarget = (x: number, y: number) => {

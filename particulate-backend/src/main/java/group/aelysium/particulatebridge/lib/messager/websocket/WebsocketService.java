@@ -19,6 +19,12 @@ public class WebsocketService extends Service {
         return this.provider;
     }
 
+    public void start() {
+        new Thread(() -> {
+            this.provider.run();
+        }).start();
+    }
+
     public void publish(GenericMessage message) {
         this.provider.broadcast(message.toString());
     }

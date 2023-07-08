@@ -15,10 +15,21 @@ export const AppLog = () => {
 	const init   = (event: any) => setLogs(event.detail);
 	const uninit = () => setLogs({});
 
-	useEffect(()=>{
+    const addMessage = (message: any) => log.add.message(message);
+    const addError = (message: any) => log.add.error(message);
+    const addConfirm = (message: any) => log.add.confirm(message);
+
+	useEffect(() => {
+        document.addEventListener(EventName.LogAppError, (e: any) => addError(e.detail));
+        document.addEventListener(EventName.LogAppMessage, (e: any) => addMessage(e.detail));
+        document.addEventListener(EventName.LogAppSuccess, (e: any) => addConfirm(e.detail));
 		document.addEventListener(EventName.TransportLogMessages, (event: any) => init(event));
 		return () => {
-			document.removeEventListener(EventName.TransportLogMessages,uninit);
+            document.removeEventListener(EventName.LogAppError, (e: any) => addError(e.detail));
+            document.removeEventListener(EventName.LogAppMessage, (e: any) => addMessage(e.detail));
+            document.removeEventListener(EventName.LogAppSuccess, (e: any) => addConfirm(e.detail));
+			document.removeEventListener(EventName.TransportLogMessages, (event: any) => init(event));
+            uninit();
 		}
 	},[]);
 

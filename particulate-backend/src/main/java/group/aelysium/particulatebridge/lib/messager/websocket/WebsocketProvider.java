@@ -2,7 +2,13 @@ package group.aelysium.particulatebridge.lib.messager.websocket;
 
 import group.aelysium.particulatebridge.ParticulateBridge;
 import group.aelysium.particulatebridge.central.API;
+import group.aelysium.particulatebridge.lib.messager.handlers.DemandKillAllMessageHandler;
+import group.aelysium.particulatebridge.lib.messager.handlers.DemandPingMessageHandler;
+import group.aelysium.particulatebridge.lib.messager.handlers.DemandToggleOffMessageHandler;
+import group.aelysium.particulatebridge.lib.messager.handlers.DemandToggleOnMessageHandler;
+import group.aelysium.particulatebridge.lib.messager.messages.DemandKillAllMessage;
 import group.aelysium.particulatebridge.lib.messager.messages.GenericMessage;
+import group.aelysium.particulatebridge.lib.messager.messages.MessageType;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -35,6 +41,10 @@ public class WebsocketProvider extends WebSocketServer {
             if (!(api.getService(WebsocketService.class).validatePrivateKey(message.getAuthKey())))
                 throw new AuthenticationException("This message has an invalid private key!");
 
+            if(message.getType() == MessageType.DEMAND_PING)       new DemandPingMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_TOGGLE_ON)  new DemandToggleOnMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_TOGGLE_OFF) new DemandToggleOffMessageHandler(message).run();
+            if(message.getType() == MessageType.DEMAND_KILL_ALL)   new DemandKillAllMessageHandler(message).run();
         } catch (Exception e) {
             e.printStackTrace();
         }

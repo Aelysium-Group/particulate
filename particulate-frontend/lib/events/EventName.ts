@@ -1,4 +1,6 @@
 export const EventName = {
+    ToggleEditMode: "ToggleEditMode",
+
     ContextMenuOpen: "react-contextMenu-open",
     ContextMenuClose: "react-contextMenu-close",
 
@@ -12,15 +14,20 @@ export const EventName = {
     LogAppSuccess: "LogAppSuccess",
     LogAppMessage: "LogAppMessage",
 
-    EnterControlEditMode: "EnterControlEditMode",
-    ExitControlEditMode: "ExitControlEditMode",
-
     RegisterNewControl: "register-control",
     DeleteControl: "delete-control",
 
     ContextMenuOption_StopEffects: "contextMenu-option-stopEffects",
 
     TransportLogMessages: "transport-logMessages",
+
+    ShowLoader: "show-loader",
+    HideLoader: "hide-loader",
+
+    
+    DispatchDemandMessage: "dispatch-demandMessage",
+    DispatchDemandToggleOnMessage: "dispatch-demandToggleOnMessage",
+    DispatchDemandToggleOffMessage: "dispatch-demandToggleOffMessage",
 
     /**
      * Event contains the catchID of the Lightbar to target

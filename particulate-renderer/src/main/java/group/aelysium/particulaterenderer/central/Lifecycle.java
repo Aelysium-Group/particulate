@@ -26,7 +26,10 @@ public class Lifecycle {
 
     protected boolean loadConfigs() {
         API api = ParticulateRenderer.getAPI();
+        PluginLogger logger = api.getLogger();
 
+        logger.log("Starting Renderer...");
+        logger.log("Loading config.yml...");
         DefaultConfig defaultConfig = DefaultConfig.newConfig(new File(String.valueOf(api.getDataFolder()), "config.yml"), "paper_config_template.yml");
         if(!defaultConfig.generate())
             throw new IllegalStateException("Unable to load or create config.yml!");
@@ -35,16 +38,19 @@ public class Lifecycle {
         handleDefaultConfig(defaultConfig);
 
 
+        logger.log("Loading effects.yml...");
         EffectsConfig effectsConfig = EffectsConfig.newConfig(new File(String.valueOf(api.getDataFolder()), "effects.yml"), "paper_effects_template.yml");
         if(!effectsConfig.generate())
             throw new IllegalStateException("Unable to load or create effects.yml!");
         effectsConfig.register();
 
+        logger.log("Loading emitters.yml...");
         EmittersConfig emittersConfig = EmittersConfig.newConfig(new File(String.valueOf(api.getDataFolder()), "emitters.yml"), "paper_emitters_template.yml");
         if(!emittersConfig.generate())
             throw new IllegalStateException("Unable to load or create emitters.yml!");
         emittersConfig.register();
 
+        logger.log("Finished!");
         return true;
     }
 

@@ -3,7 +3,7 @@
 # Effects
 #
 # Valid effects:
-# Particle, Block, Firework, Crystal, Dragon, Potion
+# Particle, Block, Firework, Crystal, Dragon, Potion, Scene
 #
 
 effects:
@@ -25,3 +25,9 @@ effects:
         particle: CLOUD
         count: 1
         speed: 0.1
+    4:
+        type: SCENE
+        effects:
+            - 1
+            - 2
+            - 3

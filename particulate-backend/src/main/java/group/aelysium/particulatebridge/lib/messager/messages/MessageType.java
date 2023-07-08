@@ -4,23 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageType {
-    public static Mapping RESPONSE_FAILURE = new Mapping(1, "RESPONSE_FAILURE");
-    public static Mapping RESPONSE_SUCCESS = new Mapping(2, "RESPONSE_SUCCESS");
-
-    public static Mapping LOGIN = new Mapping(100, "LOGIN");
-
-    public static Mapping CONTROL_DEMAND = new Mapping(200, "CONTROL_DEMAND");
-    public static Mapping CONTROL_TOGGLE_ON = new Mapping(201, "CONTROL_TOGGLE_ON");
-    public static Mapping CONTROL_TOGGLE_OFF = new Mapping(202, "CONTROL_TOGGLE_OFF");
+    public static Mapping DEMAND_PING = new Mapping(200, "CONTROL_DEMAND");
+    public static Mapping DEMAND_TOGGLE_ON = new Mapping(201, "CONTROL_TOGGLE_ON");
+    public static Mapping DEMAND_TOGGLE_OFF = new Mapping(202, "CONTROL_TOGGLE_OFF");
+    public static Mapping DEMAND_KILL_ALL = new Mapping(203, "CONTROL_KILL_ALL");
 
     public static List<Mapping> toList() {
         List<Mapping> list = new ArrayList<>();
-        list.add(RESPONSE_FAILURE);
-        list.add(RESPONSE_SUCCESS);
-        list.add(LOGIN);
-        list.add(CONTROL_DEMAND);
-        list.add(CONTROL_TOGGLE_ON);
-        list.add(CONTROL_TOGGLE_OFF);
+        list.add(DEMAND_PING);
+        list.add(DEMAND_TOGGLE_ON);
+        list.add(DEMAND_TOGGLE_OFF);
+        list.add(DEMAND_KILL_ALL);
 
         return list;
     }

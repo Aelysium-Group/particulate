@@ -2,6 +2,9 @@ package group.aelysium.particulatebridge;
 
 import group.aelysium.particulatebridge.central.API;
 import group.aelysium.particulatebridge.central.Lifecycle;
+import group.aelysium.particulatebridge.lib.messager.redis.RedisClient;
+import group.aelysium.particulatebridge.lib.messager.redis.RedisService;
+import group.aelysium.particulatebridge.lib.messager.redis.RedisSubscriber;
 import group.aelysium.particulatebridge.lib.model.Serviceable;
 import group.aelysium.particulatebridge.lib.messager.websocket.WebsocketService;
 
@@ -24,11 +27,30 @@ public class ParticulateBridge extends Serviceable {
     }
 
     public void start() {
+        System.out.println("Preparing websocket listener...");
+
         int port = 8080;
 
         WebsocketService websocketService = new WebsocketService(port, "nathan".toCharArray());
         this.services.put(WebsocketService.class, websocketService);
-        websocketService.getServer().run();
+        websocketService.start();
+        System.out.println("Finished! Listening to websocket on port: "+port);
+
+        System.out.println("Preparing Redis bridge...");
+        RedisClient.Builder redisClientbuilder = new RedisClient.Builder()
+                .setHost("redis-16309.c1.us-central1-2.gce.cloud.redislabs.com")
+                .setPort(16309)
+                .setUser("default")
+                .setPassword("m3wv3479r6xyz6vwSdaGmc0NUT47Smft")
+                .setDataChannel("particulate")
+                .setPrivateKey("redis-key".toCharArray());
+
+        RedisService redisService = new RedisService(redisClientbuilder, "redis-key".toCharArray());
+        this.services.put(RedisService.class, redisService);
+        // The bridge doesn't need to listen for messages, it only needs to send them!
+        // redisService.start(RedisSubscriber.class);
+        System.out.println("Finished! Redis is ready to transmit!");
+        System.out.println("Started.");
     }
 
     public static void main(String[] args ) {
