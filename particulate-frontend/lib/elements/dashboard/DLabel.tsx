@@ -3,10 +3,11 @@ import { InterfaceColor } from "../../resources/InterfaceColor";
 import { useState, useRef, useEffect } from 'react';
 import { Position } from '../../resources/Position';
 import { Icon, IconName } from "../Icon";
-import { throw_closeContextMenuEvent } from "../../events/events";
 import { EventName } from "../../events/EventName";
 import { ContextLaunchingDiv } from "../context/ContextLaunchingDiv";
 import { Option } from "../context/ContextMenuOption";
+import { throw_createNewElementEvent, throw_removeElementEvent, throw_updateElementEvent } from "../../events/events";
+import { ControlType } from "../generic/controls/Control";
 
 const editingButton = [
     new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
@@ -30,12 +31,13 @@ interface DLabel {
     color?: InterfaceColor;
     onDragStart?: Function;
     onDragEnd?: Function;
+    label: string;
 }
 export const DLabel = (props: DLabel) => {
     const [ editable, setEditable ] = useState(props.initialEditMode ?? false);
-    const [ target, setTarget ] = useState({x: props.initialCell.x * 124, y: props.initialCell.y * 124});
+    const [ target, setTarget ] = useState({x: props.initialCell.x, y: props.initialCell.y});
     const [ drag, setDrag ] = useState(false);
-    const [ value, setValue ] = useState("Text Label");
+    const [ value, setValue ] = useState(props.label ?? "Text Label");
     const currentRef: any = useRef(null);
 
     useEffect(() => {
@@ -46,6 +48,10 @@ export const DLabel = (props: DLabel) => {
             document.removeEventListener(EventName.ExitControlEditMode, () => setEditable(false));
         }
     },[]);
+
+    const updateLabelControl = (position: Position) => {
+        throw_updateElementEvent(props.uuid, ControlType.LABEL, undefined, undefined, props.color, position, value);
+    }
 
     const render_live = () => (
         <motion.span
@@ -75,6 +81,8 @@ export const DLabel = (props: DLabel) => {
             if(boundingBox) {
                 const newLocation = calcNewTarget(boundingBox.x, boundingBox.y);
                 setTarget({ x: newLocation.x, y: newLocation.y });
+
+                updateLabelControl({ x: newLocation.x, y: newLocation.y });
             }
             if(props.onDragEnd) props.onDragEnd();
         }
@@ -104,6 +112,7 @@ export const DLabel = (props: DLabel) => {
                         onFocus={() => setDrag(false)}
                         onBlur={() => setDrag(true)}
                         onHoverStart={() => setDrag(false)}
+                        onBlurCapture={() => updateLabelControl(target)}
                         />
                     <motion.div
                         className="absolute -top-5px -right-5px bg-neutral-500 w-20px aspect-square rounded-full overflow-hidden cursor-move"

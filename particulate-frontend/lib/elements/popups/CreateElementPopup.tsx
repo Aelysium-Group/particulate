@@ -17,13 +17,13 @@ export const CreateElementPopup = () => {
     const [ active, setActive ] = useState(false);
     const [ position, setPosition ] = useState({x: 0, y: 0});
     const [ channelID, setChannelID ]: [ string, Function ] = useState("");
-    const [ effectID, setEffectID ]: [ number, Function ] = useState(-1);
+    const [ effectID, setEffectID ]: [ any, Function ] = useState("");
     const [ color, setColor ]: [ any, Function ] = useState(undefined);
     const [ type, setType ]: [ ControlType, Function ] = useState(undefined);
 
     const unset = () => {
         setChannelID("");
-        setEffectID(-1);
+        setEffectID("");
         setColor(undefined);
         setType(undefined);
     }
@@ -33,11 +33,12 @@ export const CreateElementPopup = () => {
         let finalColor = color;
         if(finalColor == undefined) finalColor = InterfaceColor.RED;
         if(channelID == "") 
-            if(type != ControlType.LABEL) return log.add.error("You must set a channelID!");
-        if(effectID == -1) 
-            if(type != ControlType.LABEL) return log.add.error("You must set an effectID!");
+            if(type != ControlType.LABEL) return log.add.error("You must set a Channel ID!");
+        if(effectID == "") 
+            if(type != ControlType.LABEL) return log.add.error("You must set an Effect ID!");
 
-        throw_createNewElementEvent(type, channelID, effectID, finalColor, position);
+        if(isNaN(effectID)) return log.add.error("Effect ID must be a number");
+        throw_createNewElementEvent(type, channelID, effectID, finalColor, position, "");
     }
 
     useEffect(() => {

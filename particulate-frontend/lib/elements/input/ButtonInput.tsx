@@ -8,7 +8,7 @@ type ButtonInput = {
 }
 export const ButtonInput = (props: ButtonInput) => (
     <motion.div
-        className='relative top-20px p-9px pt-8px mt-10px text-center text-2xl rounded-xl block text-neutral-300 font-bold cursor-pointer select-none'
+        className='relative p-9px pt-8px my-20px text-center text-2xl rounded-xl block text-neutral-300 font-bold cursor-pointer select-none'
         style={{ background: props.color }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.9 }}

@@ -14,6 +14,8 @@ export const IconName = {
     STOP: "stop",
     
     CLOSE: "close",
+    
+    TRANSFER: "transfer",
 } as const;
 export type IconName = typeof IconName[keyof typeof IconName];
 

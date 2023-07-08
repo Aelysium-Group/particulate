@@ -24,8 +24,16 @@ export const throw_closeContextMenuEvent = () => {
     document.dispatchEvent(event);
 }
 
-export const throw_createNewElementEvent = (type: string, channelID: string, effectID: number, color: string, position: Position) => {
-    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, effectID, color, position} as ParseableControlObject });
+export const throw_createNewElementEvent = (type: string, channelID: string, effectID: number, color: string, position: Position, label: string) => {
+    const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, effectID, color, position, label} as ParseableControlObject });
+    document.dispatchEvent(event);
+}
+export const throw_updateElementEvent = (uuid: string, type: string, channelID: string, effectID: number, color: string, position: Position, label: string) => {
+    const event = new CustomEvent(EventName.UpdateControl, { detail: {uuid, type, channelID, effectID, color, position, label} as ParseableControlObject });
+    document.dispatchEvent(event);
+}
+export const throw_removeElementEvent = (uuid: string) => {
+    const event = new CustomEvent(EventName.DeleteControl, { detail: {uuid} });
     document.dispatchEvent(event);
 }
 
@@ -49,5 +57,10 @@ export const throw_sendDemandToggleOnMessage = (channelID: string, effectID: num
 }
 export const throw_sendDemandToggleOffMessage = (channelID: string, effectID: number) => {
     const event = new CustomEvent(EventName.DispatchDemandToggleOffMessage, {detail: { channelID, effectID }});
+    document.dispatchEvent(event);
+}
+
+export const throw_openImportExportPopup = () => {
+    const event = new CustomEvent(EventName.OpenImportExportPopup);
     document.dispatchEvent(event);
 }

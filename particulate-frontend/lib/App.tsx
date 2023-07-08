@@ -10,7 +10,7 @@ import { CreateElementPopup } from './elements/popups/CreateElementPopup';
 import { LightBar } from './elements/LightBar';
 import { Control, ControlType, ParseableControlObject } from './elements/generic/controls/Control';
 import { AppLog } from './elements/log/AppLog';
-import { throw_lightBarColorUpdate, throw_event } from './events/events';
+import { throw_lightBarColorUpdate, throw_event, throw_openImportExportPopup } from './events/events';
 import { DButtonTap } from './elements/dashboard/DButtonTap';
 import { DButtonToggle } from './elements/dashboard/DButtonToggle';
 import { useLog } from './hooks/useLog';
@@ -20,6 +20,9 @@ import { LoginPopup } from './elements/popups/LoginPopup';
 import { Client } from './session/Client';
 import { LoadingCircle } from './elements/LoadingCircle';
 import { DButtonHold } from './elements/dashboard/DButtonHold';
+import { MasterImportExportButton } from './elements/dashboard/MasterImportExportButton';
+import { ImportExportPopup } from './elements/popups/ImportExportPopup';
+import { Position } from './resources/Position';
 
 const editingContextMenu = [
     new Option(IconName.ADD, 'New Controller', EventName.OpenCreateElementPopUp),
@@ -33,7 +36,6 @@ const liveContextMenu = [
 
 export const App = () => {
     const log = useLog();
-    const [ isLoggedIn, setLogin ] = useState(false);
     const [ backgroundGridShow, setBackgroundGridShow ] = useState(false);
     const [ editMode, setEditMode ] = useState(false);
     const [ controls, setControls ]: [ Control[], Function ] = useState([]);
@@ -43,6 +45,12 @@ export const App = () => {
         log.add.error("Stopped all effects!");
     }
     const removeControl = (uuid: string) => setControls(controls.filter(control => control.uuid !== uuid));
+    const updateControl = (object) => {
+        const control: Control = controls.filter(control => control.uuid == object.uuid)[0];
+        if(control == null) return;
+
+        control.update(object.label, object.position);
+    }
     const addController = (object: ParseableControlObject) => {
         const newControl = Control.parseControl(object);
 
@@ -55,8 +63,10 @@ export const App = () => {
 
     const toggleEditMode = () => {
         if(editMode) {
+            throw_event(EventName.ExitControlEditMode);
             setEditMode(false);
         } else {
+            throw_event(EventName.EnterControlEditMode);
             setEditMode(true);
         }
     }
@@ -65,6 +75,7 @@ export const App = () => {
         document.addEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
         document.addEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
         document.addEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
+        document.addEventListener(EventName.UpdateControl,(e: any) => updateControl(e.detail));
         document.addEventListener(EventName.ToggleEditMode, toggleEditMode);
 
         if(Client.instance == null || Client.instance.socket == null) throw_event(EventName.OpenLoginPopup);
@@ -72,9 +83,10 @@ export const App = () => {
             document.removeEventListener(EventName.ContextMenuOption_StopEffects, stopEffects);
             document.removeEventListener(EventName.RegisterNewControl,(e: any) => addController(e.detail));
             document.removeEventListener(EventName.DeleteControl,(e: any) => removeControl(e.detail.details.uuid));
+            document.removeEventListener(EventName.UpdateControl,(e: any) => updateControl(e.detail));
             document.removeEventListener(EventName.ToggleEditMode, toggleEditMode);
         }
-    },[controls, editMode]);
+    }, [controls, editMode]);
 
     const view_default = () => {
         return (
@@ -82,6 +94,7 @@ export const App = () => {
                 <LoginPopup />
                 <ContextMenu />
                 <CreateElementPopup />
+                <ImportExportPopup controls={controls} setControls={(controls: Control[]) => {setControls(controls)}} />
                 <div className="text-center">
                     <div className='relative h-124px w-screen bg-template-gray overflow-hidden shadow-xl'>
                         <span
@@ -103,15 +116,16 @@ export const App = () => {
                         <div className="z-10" draggable={false}>
                             <AnimatePresence>
                                 {controls.map((item: Control) => {
-                                    if(item.type == ControlType.BUTTON_TAP)     return (<DButtonTap    key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
-                                    if(item.type == ControlType.BUTTON_HOLD)    return (<DButtonHold   key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
-                                    if(item.type == ControlType.BUTTON_TOGGLE)  return (<DButtonToggle key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
-                                    if(item.type == ControlType.LABEL)          return (<DLabel        key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={true} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_TAP)     return (<DButtonTap    key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_HOLD)    return (<DButtonHold   key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.BUTTON_TOGGLE)  return (<DButtonToggle key={item.uuid} uuid={item.uuid} channelID={item.channelID} effectID={item.effectID} color={item.color} initialCell={item.position} initialEditMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} />);
+                                    if(item.type == ControlType.LABEL)          return (<DLabel        key={item.uuid} uuid={item.uuid} color={item.color} initialCell={item.position} initialEditMode={editMode} onDragStart={() => setBackgroundGridShow(true)} onDragEnd={() => setBackgroundGridShow(false)} label={item.label} />);
                                 })}
                             </AnimatePresence>
                         </div>
                     </div>
                     <MasterEditButton onClick={toggleEditMode} editMode={editMode} />
+                    <MasterImportExportButton onClick={throw_openImportExportPopup} />
                 </div>
                 <AppLog />
             </>

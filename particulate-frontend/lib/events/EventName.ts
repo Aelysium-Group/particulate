@@ -10,12 +10,19 @@ export const EventName = {
     OpenLoginPopup: "OpenLoginPopup",
     CloseLoginPopup: "CloseLoginPopup",
 
+    OpenImportExportPopup: "OpenImportExportPopup",
+    CloseImportExportPopup: "CloseImportExportPopup",
+
     LogAppError: "LogAppError",
     LogAppSuccess: "LogAppSuccess",
     LogAppMessage: "LogAppMessage",
 
+    EnterControlEditMode: "EnterControlEditMode",
+    ExitControlEditMode: "ExitControlEditMode",
+
     RegisterNewControl: "register-control",
     DeleteControl: "delete-control",
+    UpdateControl: "update-control",
 
     ContextMenuOption_StopEffects: "contextMenu-option-stopEffects",
 
