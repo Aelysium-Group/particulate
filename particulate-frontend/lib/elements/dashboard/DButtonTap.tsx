@@ -37,6 +37,7 @@ export const DButtonTap = (props: DButtonTap) => {
     const [ editable, setEditable ] = useState(props.initialEditMode ?? false);
     const [ target, setTarget ] = useState({x: props.initialCell.x * 124, y: props.initialCell.y * 124});
     const [ drag, setDrag ] = useState(false);
+    const [ active, setActive ] = useState(false);
     const currentRef: any = useRef(null);
 
     useEffect(() => {
@@ -52,19 +53,23 @@ export const DButtonTap = (props: DButtonTap) => {
         <ContextLaunchingDiv options={[]} details={{uuid: props.uuid}}>
             <motion.div
                 ref={currentRef}
-                className={`absolute rounded-full w-100px m-12px aspect-square overflow-hidden cursor-pointer`}
+                className={`absolute rounded-full w-100px m-12px aspect-square overflow-hidden cursor-pointer ${active ? "animated-tap-backglow" : ""}`}
                 whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9, boxShadow: "0px 0px 25px -5px white"}}
+                whileTap={{ scale: 0.9}}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 onTapStart={(e) => {
+                    setActive(true);
                     throw_closeContextMenuEvent();
                     throw_sendDemandMessage(props.channelID, props.effectID);
                 }}
-                initial={{background: props.color ?? InterfaceColor.RED, x: window.innerWidth * 0.5, y: window.innerHeight, boxShadow: "0px 0px 0px -5px white"}}
+                onTap={() => {setActive(false);}}
+                onTapCancel={() => {setActive(false);}}
+                initial={{background: props.color ?? InterfaceColor.RED, x: window.innerWidth * 0.5, y: window.innerHeight}}
                 animate={{x: target.x, y: target.y}}
                 draggable={false}
                 >
                 <div className={`absolute inset-0 w-100 aspect-square shadow-inset-xl`} />
+                <div className={`absolute inset-0 w-100 aspect-square ${active ? "animated-tap-glow" : ""}`} />
             </motion.div>
         </ContextLaunchingDiv>
         );

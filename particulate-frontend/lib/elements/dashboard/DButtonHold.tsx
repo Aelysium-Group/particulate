@@ -59,7 +59,7 @@ export const DButtonHold = (props: DButtonHold) => {
             <ContextLaunchingDiv options={[]} details={{uuid: props.uuid}}>
                 <motion.div
                     ref={currentRef}
-                    className={`absolute rounded-3xl w-100px m-12px aspect-square overflow-hidden cursor-pointer ${buttonShadowOutset}`}
+                    className={`absolute rounded-3xl w-100px m-12px aspect-square overflow-hidden cursor-pointer ${buttonShadowOutset} ${ active ? "animated-hold-vibrate" : ""}`}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -82,6 +82,30 @@ export const DButtonHold = (props: DButtonHold) => {
                     draggable={false}
                     >
                     <div className={`absolute inset-0 w-100 aspect-square ${buttonShadowInset}`} />
+                    {
+                        active ?
+                        <>
+                            <motion.div 
+                                className="absolute aspect-square border-neutral-50 border-8 animated-hold-spin"
+                                initial={{width: "300px", inset: "-120px"}}
+                                transition={{ type: "spring", stiffness: 100, damping: 100 }}
+                                animate={{width: "90px", inset: "5px"}}
+                                />
+                            <motion.div 
+                                className="absolute inset-25px w-50px aspect-square opacity-75 border-neutral-50 border-4 animated-hold-spin-reverse"
+                                initial={{width: "150px", inset: "-25px"}}
+                                transition={{ type: "spring", stiffness: 75, damping: 100 }}
+                                animate={{width: "50px", inset: "25px"}}
+                                />
+                            <motion.div 
+                                className="absolute aspect-square opacity-50 border-neutral-50 border-2 animated-hold-spin"
+                                initial={{width: "100px", inset: "0px"}}
+                                transition={{ type: "spring", stiffness: 100, damping: 100 }}
+                                animate={{width: "25px", inset: "37.5px"}}
+                                />
+                        </>
+                        : <></>
+                    }
                 </motion.div>
             </ContextLaunchingDiv>
         )

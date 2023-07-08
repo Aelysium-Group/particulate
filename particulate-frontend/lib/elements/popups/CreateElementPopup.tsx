@@ -38,7 +38,8 @@ export const CreateElementPopup = () => {
             if(type != ControlType.LABEL) return log.add.error("You must set an Effect ID!");
 
         if(isNaN(effectID)) return log.add.error("Effect ID must be a number");
-        throw_createNewElementEvent(type, channelID, effectID, finalColor, position, "");
+        if(type != ControlType.LABEL) return throw_createNewElementEvent(type, channelID, effectID, finalColor, position, "");
+        throw_createNewElementEvent(type, undefined, undefined, finalColor, position, "Text Label");
     }
 
     useEffect(() => {

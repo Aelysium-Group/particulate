@@ -63,7 +63,7 @@ export const DButtonToggle = (props: DButtonToggle) => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    onTapStart={() => {
+                    onTap={() => {
                         if(active) throw_sendDemandToggleOffMessage(props.channelID, props.effectID);
                         if(!active) throw_sendDemandToggleOnMessage(props.channelID, props.effectID);
 
