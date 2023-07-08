@@ -1,45 +1,27 @@
-package group.aelysium.particulaterenderer.lib.redis.messages.variants;
+package group.aelysium.particulatebridge.lib.messager.messages;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
-import group.aelysium.particulaterenderer.lib.redis.messages.MessageType;
 import io.lettuce.core.KeyValue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToggleOffMessage extends GenericMessage {
-    private int channelId;
+public class DemandToggleOnMessage extends GenericMessage {
+    private String channelId;
     private int effectId;
 
-    public int getChannelID() {
+    public String getChannelID() {
         return channelId;
     }
     public int getEffectID() {
         return effectId;
     }
 
-    public ToggleOffMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_TOGGLE_OFF);
+    public DemandToggleOnMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(MessageType.CONTROL_TOGGLE_ON);
 
-        if(!ToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
-            throw new IllegalStateException("Unable to construct message! There are missing parameters!");
-
-        parameters.forEach(entry -> {
-            String key = entry.getKey();
-            JsonPrimitive value = entry.getValue();
-
-            switch (key) {
-                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsInt();
-                case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
-            }
-        });
-    }
-    public ToggleOffMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_OFF);
-
-        if(!ToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -47,7 +29,23 @@ public class ToggleOffMessage extends GenericMessage {
             JsonPrimitive value = entry.getValue();
 
             switch (key) {
-                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsInt();
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
+                case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
+            }
+        });
+    }
+    public DemandToggleOnMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_ON);
+
+        if(!DemandToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
+            throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
+
+        parameters.forEach(entry -> {
+            String key = entry.getKey();
+            JsonPrimitive value = entry.getValue();
+
+            switch (key) {
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
                 case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
             }
         });
@@ -71,16 +69,16 @@ public class ToggleOffMessage extends GenericMessage {
      * @param dataChannel The datachannel to target.
      * @return A DemandMessage.
      */
-    public static ToggleOffMessage from(int dataChannel) {
+    public static DemandToggleOnMessage from(String dataChannel, int effectId) {
         List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
-        parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(DemandToggleOffMessage.ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
+        parameters.add(KeyValue.just(DemandToggleOffMessage.ValidParameters.EFFECT_ID, new JsonPrimitive(effectId)));
 
-        return new ToggleOffMessage(parameters);
+        return new DemandToggleOnMessage(parameters);
     }
 
     public interface ValidParameters {
-        String CHANNEL_ID = "id";
+        String CHANNEL_ID = "cid";
         String EFFECT_ID = "eid";
 
         static List<String> toList() {

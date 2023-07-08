@@ -9,21 +9,21 @@ import io.lettuce.core.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToggleOnMessage extends GenericMessage {
-    private int channelId;
+public class DemandPingMessage extends GenericMessage {
+    private String channelId;
     private int effectId;
 
-    public int getChannelID() {
+    public String getChannelID() {
         return channelId;
     }
     public int getEffectID() {
         return effectId;
     }
 
-    public ToggleOnMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_TOGGLE_ON);
+    public DemandPingMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(MessageType.DEMAND_PING);
 
-        if(!ToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandPingMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -31,15 +31,15 @@ public class ToggleOnMessage extends GenericMessage {
             JsonPrimitive value = entry.getValue();
 
             switch (key) {
-                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsInt();
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
                 case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
             }
         });
     }
-    public ToggleOnMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_TOGGLE_ON);
+    public DemandPingMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(rawMessage, authKey, MessageType.DEMAND_PING);
 
-        if(!ToggleOnMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandPingMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -47,7 +47,7 @@ public class ToggleOnMessage extends GenericMessage {
             JsonPrimitive value = entry.getValue();
 
             switch (key) {
-                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsInt();
+                case ValidParameters.CHANNEL_ID -> this.channelId = value.getAsString();
                 case ValidParameters.EFFECT_ID -> this.effectId = value.getAsInt();
             }
         });
@@ -66,21 +66,8 @@ public class ToggleOnMessage extends GenericMessage {
         return object;
     }
 
-    /**
-     * Create a new DemandMessage targeting the specific datachannel
-     * @param dataChannel The datachannel to target.
-     * @return A DemandMessage.
-     */
-    public static ToggleOnMessage from(int dataChannel) {
-        List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
-        parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
-
-        return new ToggleOnMessage(parameters);
-    }
-
     public interface ValidParameters {
-        String CHANNEL_ID = "id";
+        String CHANNEL_ID = "cid";
         String EFFECT_ID = "eid";
 
         static List<String> toList() {

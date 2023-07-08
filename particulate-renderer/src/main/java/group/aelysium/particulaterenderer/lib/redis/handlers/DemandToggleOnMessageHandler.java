@@ -10,10 +10,10 @@ import group.aelysium.particulaterenderer.lib.effects.Effect;
 import group.aelysium.particulaterenderer.lib.redis.messages.GenericMessage;
 import group.aelysium.particulaterenderer.lib.redis.messages.variants.ToggleOnMessage;
 
-public class ToggleOnMessageHandler implements Runnable {
+public class DemandToggleOnMessageHandler implements Runnable {
     private final ToggleOnMessage message;
 
-    public ToggleOnMessageHandler(GenericMessage message) {
+    public DemandToggleOnMessageHandler(GenericMessage message) {
         this.message = (ToggleOnMessage) message;
     }
 

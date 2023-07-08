@@ -9,7 +9,7 @@ import io.lettuce.core.KeyValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DemandMessage extends GenericMessage {
+public class DemandToggleOffMessage extends GenericMessage {
     private String channelId;
     private int effectId;
 
@@ -20,10 +20,10 @@ public class DemandMessage extends GenericMessage {
         return effectId;
     }
 
-    public DemandMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(MessageType.CONTROL_DEMAND);
+    public DemandToggleOffMessage(List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(MessageType.DEMAND_TOGGLE_OFF);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -36,10 +36,10 @@ public class DemandMessage extends GenericMessage {
             }
         });
     }
-    public DemandMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
-        super(rawMessage, authKey, MessageType.CONTROL_DEMAND);
+    public DemandToggleOffMessage(String rawMessage, char[] authKey, List<KeyValue<String, JsonPrimitive>> parameters) {
+        super(rawMessage, authKey, MessageType.DEMAND_TOGGLE_OFF);
 
-        if(!DemandMessage.validateParameters(ValidParameters.toList(), parameters))
+        if(!DemandToggleOffMessage.validateParameters(ValidParameters.toList(), parameters))
             throw new IllegalStateException("Unable to construct Redis message! There are missing parameters!");
 
         parameters.forEach(entry -> {
@@ -66,21 +66,8 @@ public class DemandMessage extends GenericMessage {
         return object;
     }
 
-    /**
-     * Create a new DemandMessage targeting the specific datachannel
-     * @param dataChannel The datachannel to target.
-     * @return A DemandMessage.
-     */
-    public static DemandMessage from(int dataChannel) {
-        List<KeyValue<String, JsonPrimitive>> parameters = new ArrayList<>();
-        parameters.add(KeyValue.just(ValidParameters.CHANNEL_ID, new JsonPrimitive(dataChannel)));
-        parameters.add(KeyValue.just(ValidParameters.EFFECT_ID, new JsonPrimitive(dataChannel)));
-
-        return new DemandMessage(parameters);
-    }
-
     public interface ValidParameters {
-        String CHANNEL_ID = "id";
+        String CHANNEL_ID = "cid";
         String EFFECT_ID = "eid";
 
         static List<String> toList() {
