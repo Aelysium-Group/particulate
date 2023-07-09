@@ -1,6 +1,8 @@
 package group.aelysium.particulaterenderer.lib;
 
+import group.aelysium.particulaterenderer.ParticulateRenderer;
 import group.aelysium.particulaterenderer.lib.effects.Effect;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.Vector;
@@ -22,12 +24,16 @@ public class EmitterCluster {
     }
 
     public void play(Effect effect) {
-        for (Location location : this.locations)
-            effect.play(location);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ParticulateRenderer.getPlugin(ParticulateRenderer.class), () -> {
+            for (Location location : this.locations)
+                effect.play(location);
+        });
     }
 
     public void pause(Effect effect) {
-        for (Location location : this.locations)
-            effect.pause(location);
+        Bukkit.getScheduler().scheduleSyncDelayedTask(ParticulateRenderer.getPlugin(ParticulateRenderer.class), () -> {
+            for (Location location : this.locations)
+                effect.pause(location);
+        });
     }
 }
