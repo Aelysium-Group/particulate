@@ -1,3 +1,5 @@
+![Aelysium Wordmark Image](https://github.com/Aelysium-Group/.github/blob/main/images/particulate-wordmark.png?raw=true)
+
 # Particulate
 Particulate is a unidirectional particle rendering system used for Minecraft stage productions.
 Create your own stage productions and control them using the Particulate dashboard.
