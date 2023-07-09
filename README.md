@@ -9,7 +9,8 @@
 Particulate is a unidirectional particle rendering system used for Minecraft stage productions.
 Create your own stage productions and control them using the Particulate dashboard.
 
-# ⚠️⚠️⚠️ Particulate is still in early beta! ⚠️⚠️⚠️
+# ⚠️⚠️⚠️ Particulate is still in pre-beta! ⚠️⚠️⚠️
+## No support will be provided to users of Particulate until it is moved out of pre-beta.
 <br>
 
 ## [Support](https://join.aelysium.group/)  |  [Wiki](https://github.com/Aelysium-Group/particulate/wiki)  |  [Download](https://github.com/Aelysium-Group/particulate/releases)  |  [Report Bugs](https://github.com/Aelysium-Group/particulate/issues)
