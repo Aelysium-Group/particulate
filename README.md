@@ -8,7 +8,8 @@
 
 Particulate is a unidirectional particle rendering system used for Minecraft stage productions.
 Create your own stage productions and control them using the Particulate dashboard.
-
+<br>
+<br>
 # ⚠️⚠️⚠️ Particulate is still in pre-beta! ⚠️⚠️⚠️
 ## No support will be provided to users of Particulate until it is moved out of pre-beta.
 <br>
@@ -18,11 +19,14 @@ Create your own stage productions and control them using the Particulate dashboa
 <br>
 
 ## What is it about?
-Particulate is built to streamline the stage effects production for Minecraft Music festivals. Used in festivals such as [Exofest](https://www.youtube.com/watch?v=EVIpt88bQcA), Shimotsuki's New Horizon Day [1](https://youtu.be/A8uwsTKqaMY), [2](https://youtu.be/s08xHYcUWVA), and [3](https://youtu.be/EGhlkEpXmok); Particulate let's you use a web dashboard to control effects in-game.
+Particulate is built to streamline the stage effects production for Minecraft Music festivals. Used in festivals such as [Exofest](https://www.youtube.com/watch?v=EVIpt88bQcA), and Shimotsuki's New Horizons Festival (Day [1](https://youtu.be/A8uwsTKqaMY), [2](https://youtu.be/s08xHYcUWVA), and [3](https://youtu.be/EGhlkEpXmok)).
+Particulate lets you use a web dashboard to control effects in-game.
 
 ## How does it work?
 Particulate operates unidirectionally. It's split into four parts: Particulate Frontend/Dashboard, Particulate Bridge, Redis, and the Particulate Rendering plugin.
+
 Using the dashboard, users connect to their own personally hosted Particulate Bridge. The Particulate Bridge forwards commands from the dashboard to Redis, which then distributes the command to all of the Paper servers running the Particulate Rendering plugin.
+
 Particulate is built to provide support for as many paper servers as you need!
 
 ## No more DMX
@@ -32,3 +36,6 @@ Particulate is not meant to be a 1-to-1 replacement for DMX. By using Particulat
 ## Simple Dashboard Integration
 Build your own version of the Particulate dashboard, or use ours!
 Particulate lets you import and export templates and connect to YOUR Particulate backend!
+
+## Share your Particulate template with others
+Particulate lets you export and import your dashboard setup. That way you can even share it with fellow FX Opperators!
