@@ -2,7 +2,7 @@
 
 # 👋 Welcome to Particulate
 [![Aelysium](https://flat.badgen.net/badge/Discord/Aelysium/5865F2?icon=discord)](https://join.aelysium.group/)
-[![Build](https://flat.badgen.net/badge/Latest%20Stable%20Release/NONE/orange?icon=discord)](https://join.aelysium.group/)
+[![Build](https://flat.badgen.net/badge/Latest%20Stable%20Release/NONE/orange?icon=maven)](https://join.aelysium.group/)
 [![License](https://flat.badgen.net/badge/License/MIT/5865F2)](https://github.com/Aelysium-Group/particulate/blob/main/LICENSE)
 <!--[![Build](https://flat.badgen.net/github/release/Aelysium-Group/particulate?label=Latest%20Stable%20Release&icon=maven)](https://github.com/Aelysium-Group/particulate/releases)-->
 
