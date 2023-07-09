@@ -26,7 +26,7 @@ const calcNewTarget = (x: number, y: number) => {
 interface DButtonHold {
     uuid: string;
     channelID: string;
-    effectID: number;
+    effectID: string;
     initialEditMode?: boolean;
     initialCell: Position;
     color?: InterfaceColor;
@@ -63,10 +63,11 @@ export const DButtonHold = (props: DButtonHold) => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                    onTapStart={() => {
+                    onTapStart={(e) => {
                         throw_sendDemandToggleOnMessage(props.channelID, props.effectID);
 
                         setActive(true);
+                        e.preventDefault();
                         throw_closeContextMenuEvent();
                     }}
                     onTapCancel={() => {
@@ -84,7 +85,7 @@ export const DButtonHold = (props: DButtonHold) => {
                     <div className={`absolute inset-0 w-100 aspect-square ${buttonShadowInset}`} />
                     {
                         active ?
-                        <>
+                        <div className="aspect-square overflow-hidden w-100px">
                             <motion.div 
                                 className="absolute aspect-square border-neutral-50 border-8 animated-hold-spin"
                                 initial={{width: "300px", inset: "-120px"}}
@@ -103,7 +104,7 @@ export const DButtonHold = (props: DButtonHold) => {
                                 transition={{ type: "spring", stiffness: 100, damping: 100 }}
                                 animate={{width: "25px", inset: "37.5px"}}
                                 />
-                        </>
+                        </div>
                         : <></>
                     }
                 </motion.div>

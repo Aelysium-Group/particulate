@@ -28,7 +28,7 @@ export class URIBuilder {
         /*
          * If anyone adds a protocol to the hostname, remove it.
          */
-        hostname = hostname.replace(/[A-z]*\:[\/]+/,"");
+        this.#_hostname = hostname.replace(/[A-z]*\:[\/]+/,"");
 
         return this;
     }

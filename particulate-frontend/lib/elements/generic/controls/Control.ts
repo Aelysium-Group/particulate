@@ -13,7 +13,7 @@ export type ControlType = typeof ControlType[keyof typeof ControlType];
 export type ParseableControlObject = {
     type: ControlType;
     channelID?: string;
-    effectID?: number;
+    effectID?: string;
     label?: string
     color: InterfaceColor;
     position: Position;
@@ -25,10 +25,10 @@ export class Control {
     readonly color: InterfaceColor;
     readonly uuid: string;
     readonly channelID: string;
-    readonly effectID: number;
+    readonly effectID: string;
     private _label: string;
 
-    constructor(x: number, y: number, channelID: string, effectID: number, color?: InterfaceColor, type?: ControlType, label?: string) {
+    constructor(x: number, y: number, channelID: string, effectID: string, color?: InterfaceColor, type?: ControlType, label?: string) {
         this.uuid = uuidv4();
         this.position = { x: Math.round(x), y: Math.round(y) };
         this.channelID = channelID;

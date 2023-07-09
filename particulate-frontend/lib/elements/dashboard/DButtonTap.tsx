@@ -26,7 +26,7 @@ const calcNewTarget = (x: number, y: number) => {
 interface DButtonTap {
     uuid: string;
     channelID: string;
-    effectID: number;
+    effectID: string;
     initialEditMode?: boolean;
     initialCell: Position;
     color?: InterfaceColor;

@@ -34,11 +34,14 @@ const liveContextMenu = [
     new Option(IconName.EDIT, 'Toggle Edit Mode', EventName.ToggleEditMode, "", true),
 ];
 
-export const App = () => {
+type App = {
+    template: Control[];
+}
+export const App = (props: App) => {
     const log = useLog();
     const [ backgroundGridShow, setBackgroundGridShow ] = useState(false);
     const [ editMode, setEditMode ] = useState(false);
-    const [ controls, setControls ]: [ Control[], Function ] = useState([]);
+    const [ controls, setControls ]: [ Control[], Function ] = useState(props.template);
 
     const stopEffects = () => {
         throw_lightBarColorUpdate("main","bg-red-500");
@@ -59,6 +62,9 @@ export const App = () => {
         
         setControls(newArray);
         throw_event(EventName.CloseCreateElementPopUp);
+    }
+    const cycleNewControllers = (controls: Control[]) => {
+        setControls(controls);
     }
 
     const toggleEditMode = () => {
@@ -94,13 +100,13 @@ export const App = () => {
                 <LoginPopup />
                 <ContextMenu />
                 <CreateElementPopup />
-                <ImportExportPopup controls={controls} setControls={(controls: Control[]) => {setControls(controls)}} />
+                <ImportExportPopup controls={controls} setControl={(controls: Control[]) => {cycleNewControllers(controls)}} />
                 <div className="text-center">
-                    <div className='relative h-124px w-screen bg-template-gray overflow-hidden shadow-xl'>
+                    <div className='relative h-124px w-screen bg-template-gray overflow-hidden shadow-xl z-30'>
                         <span
-                            className={`absolute top-30px left-[62px] text-left font-sneakers text-6xl cursor-default select-none text-neutral-100`}>
-                                Particulate
-                                <span className={`text-3xl ${editMode ? "text-blue-500" : "text-amber-500"}`}>
+                            className={`absolute top-5px left-[62px] text-left font-sneakers text-6xl cursor-default select-none text-neutral-100`}>
+                                <div className={`relative top-5px mr-10px inline-block w-500px h-75px bg-no-repeat bg-center bg-contain`} style={{backgroundImage: `url(./icons/particulate-wordmark.png)`}}></div>
+                                <span className={`relative -left-100px top-20px text-3xl ${editMode ? "text-blue-500" : "text-amber-500"}`}>
                                     {editMode ? " Editor" : " Controller"}
                                 </span>
                         </span>

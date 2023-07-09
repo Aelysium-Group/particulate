@@ -11,7 +11,7 @@ import { motion } from 'framer-motion';
 
 type ImportExportPopup = {
     controls: Control[];
-    setControls: Function;
+    setControl: Function;
 }
 export const ImportExportPopup = (props: ImportExportPopup) => {
     const log = useLog();
@@ -36,9 +36,10 @@ export const ImportExportPopup = (props: ImportExportPopup) => {
                 controls.push(Control.parseControl(entry));
             });
 
-            props.setControls(controls);
+            props.setControl(controls);
         } catch(error) {
             log.add.error("Unable to parse import!");
+            console.log(error);
         }
     }
 

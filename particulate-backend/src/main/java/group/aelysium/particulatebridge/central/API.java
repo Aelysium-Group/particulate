@@ -22,7 +22,9 @@ public class API {
     }
 
     public String getDataFolder() {
-        return "";
+        String currentdir = System.getProperty("user.dir");
+        currentdir = currentdir.replace( "\\", "/" );
+        return currentdir;
     }
 
     public <S extends Service> S getService(Class<S> type) {

@@ -24,11 +24,11 @@ export const throw_closeContextMenuEvent = () => {
     document.dispatchEvent(event);
 }
 
-export const throw_createNewElementEvent = (type: string, channelID: string, effectID: number, color: string, position: Position, label: string) => {
+export const throw_createNewElementEvent = (type: string, channelID: string, effectID: string, color: string, position: Position, label: string) => {
     const event = new CustomEvent(EventName.RegisterNewControl, { detail: {type, channelID, effectID, color, position, label} as ParseableControlObject });
     document.dispatchEvent(event);
 }
-export const throw_updateElementEvent = (uuid: string, type: string, channelID: string, effectID: number, color: string, position: Position, label: string) => {
+export const throw_updateElementEvent = (uuid: string, type: string, channelID: string, effectID: string, color: string, position: Position, label: string) => {
     const event = new CustomEvent(EventName.UpdateControl, { detail: {uuid, type, channelID, effectID, color, position, label} as ParseableControlObject });
     document.dispatchEvent(event);
 }
@@ -47,15 +47,15 @@ export const throw_genericEventFromContextMenu = (eventName: EventName, target: 
     document.dispatchEvent(event);
 }
 
-export const throw_sendDemandMessage = (channelID: string, effectID: number) => {
+export const throw_sendDemandMessage = (channelID: string, effectID: string) => {
     const event = new CustomEvent(EventName.DispatchDemandMessage, {detail: { channelID, effectID }});
     document.dispatchEvent(event);
 }
-export const throw_sendDemandToggleOnMessage = (channelID: string, effectID: number) => {
+export const throw_sendDemandToggleOnMessage = (channelID: string, effectID: string) => {
     const event = new CustomEvent(EventName.DispatchDemandToggleOnMessage, {detail: { channelID, effectID }});
     document.dispatchEvent(event);
 }
-export const throw_sendDemandToggleOffMessage = (channelID: string, effectID: number) => {
+export const throw_sendDemandToggleOffMessage = (channelID: string, effectID: string) => {
     const event = new CustomEvent(EventName.DispatchDemandToggleOffMessage, {detail: { channelID, effectID }});
     document.dispatchEvent(event);
 }
