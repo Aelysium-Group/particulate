@@ -1,0 +1,1 @@
+export type OnReconnectCallback = (connection: WebSocket) => void;

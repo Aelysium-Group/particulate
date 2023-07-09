@@ -1,0 +1,12 @@
+redis:
+    private-key: ""
+    host: ""
+    port: 3306
+    user: "default"
+    password: "password"
+
+    data-channel: "particulate"
+
+websocket:
+    port: 8080
+    private-key: ""
