@@ -19,7 +19,7 @@ public class CrystalEffect extends Effect {
     public void play(Location location) {
         Collection<Entity> entities = location.getNearbyEntities(0.5,0.5,0.5);
         for(Entity entity : entities)
-            if(entity.getName().equals("entity.EnderCrystal.name"))
+            if(entity instanceof EnderCrystal)
                 return;
 
 
@@ -35,7 +35,7 @@ public class CrystalEffect extends Effect {
     public void pause(Location location) {
         Collection<Entity> entities = location.getNearbyEntities(0.5,0.5,0.5);
         for(Entity entity : entities)
-            if(entity.getName().equals("entity.EnderCrystal.name"))
+            if(entity instanceof EnderCrystal)
                 entity.remove();
     }
 

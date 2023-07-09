@@ -144,8 +144,6 @@ public class GenericMessage {
          * @throws IllegalStateException If the required parameters are not provided.
          */
         public GenericMessage buildReceived() {
-            System.out.println(this.rawMessage);
-
             if (this.rawMessage == null)
                 throw new IllegalStateException("You must provide `rawMessage` when building a receivable RedisMessage!");
             if (this.authKey == null)

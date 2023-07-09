@@ -93,34 +93,28 @@ public class EffectsConfig extends YAML {
 
                         try {
                             fireworkBuilder.setHasFade(this.getNode(value, "fade", Boolean.class));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
                         try {
                             fireworkBuilder.setHasFlicker(this.getNode(value, "flicker", Boolean.class));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
                         try {
                             fireworkBuilder.setHasTrail(this.getNode(value, "trail", Boolean.class));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
                         try {
                             fireworkBuilder.setLife(this.getNode(value, "life", Integer.class));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
 
                         try {
                             List<String> stringColors = this.getNode(value, "colors", List.class);
                             for (String color : stringColors)
                                 fireworkBuilder.addColor(ColorParser.parse(color));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) { }
 
                         try {
                             List<String> stringShapes = this.getNode(value, "shapes", List.class);
                             for (String shape : stringShapes)
                                 fireworkBuilder.addShape(org.bukkit.FireworkEffect.Type.valueOf(shape));
-                        } catch (Exception ignore) {
-                        }
+                        } catch (Exception ignore) {}
 
                         service.add(fireworkBuilder.build());
                     }
@@ -186,9 +180,7 @@ public class EffectsConfig extends YAML {
 
             YAML.get(value, "effects").childrenList().forEach(entry -> {
                 try {
-                    System.out.println(entry);
                     int effectId = entry.getInt();
-                    System.out.println(effectId);
                     Effect effect = service.find(effectId).orElseThrow();
 
                     sceneBuilder.addEffect(effect);

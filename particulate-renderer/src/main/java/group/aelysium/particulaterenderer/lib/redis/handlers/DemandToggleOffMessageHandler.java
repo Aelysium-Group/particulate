@@ -25,6 +25,7 @@ public class DemandToggleOffMessageHandler implements Runnable {
             EmitterCluster cluster = api.getService(EmitterService.class).find(message.getChannelID()).orElseThrow();
             Effect effect = api.getService(EffectService.class).find(message.getEffectID()).orElseThrow();
 
+            cluster.pause(effect);
             api.getService(RunnerQueueService.class).dequeue(effect, cluster);
         } catch (Exception e) {
             e.printStackTrace();

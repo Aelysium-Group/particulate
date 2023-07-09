@@ -40,6 +40,7 @@ public class FireworkEffect extends Effect {
         for (org.bukkit.FireworkEffect.Type shape : this.shapes)
             fireworkEffectBuilder.with(shape);
 
+        if(this.colors.size() == 0) this.colors.add(Color.WHITE);
         fireworkEffectBuilder.withColor(this.colors);
 
         if(this.hasFlicker) fireworkEffectBuilder.withFlicker();
@@ -63,8 +64,8 @@ public class FireworkEffect extends Effect {
         private Boolean hasTrail = false;
         private Boolean hasFade = false;
         private Integer life = 0;
-        private List<org.bukkit.FireworkEffect.Type> shapes = new ArrayList<>();
-        private List<Color> colors = new ArrayList<>();
+        private final List<org.bukkit.FireworkEffect.Type> shapes = new ArrayList<>();
+        private final List<Color> colors = new ArrayList<>();
 
         public Builder setId(Integer id) {
             this.id = id;
@@ -97,12 +98,6 @@ public class FireworkEffect extends Effect {
 
         public FireworkEffect build() throws Throwable {
             if(this.id == null) throw new NullPointerException();
-            if(this.hasFlicker == null) throw new NullPointerException();
-            if(this.hasTrail == null) throw new NullPointerException();
-            if(this.hasFade == null) throw new NullPointerException();
-            if(this.life == null) throw new NullPointerException();
-            if(this.shapes == null) throw new NullPointerException();
-            if(this.colors == null) throw new NullPointerException();
             return new FireworkEffect(
                     this.id,
                     this.hasFlicker,

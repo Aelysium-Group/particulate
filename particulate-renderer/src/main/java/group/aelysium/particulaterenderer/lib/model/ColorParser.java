@@ -5,48 +5,26 @@ import org.bukkit.Color;
 public class ColorParser {
     public static Color parse(String string) {
         string = string.toUpperCase();
-        switch (string) {
-            case "WHITE":
-                return Color.WHITE;
-            case "DARK_GRAY":
-            case "SILVER":
-                return Color.SILVER;
-            case "GRAY":
-                return Color.GRAY;
-            case "BLACK":
-                return Color.BLACK;
-            case "RED":
-                return Color.RED;
-            case "DARK_RED":
-            case "MAROON":
-                return Color.MAROON;
-            case "YELLOW":
-                return Color.YELLOW;
-            case "OLIVE":
-                return Color.OLIVE;
-            case "LIME":
-                return Color.LIME;
-            case "GREEN":
-                return Color.GREEN;
-            case "AQUA":
-                return Color.AQUA;
-            case "CYAN":
-            case "TEAL":
-                return Color.TEAL;
-            case "BLUE":
-                return Color.BLUE;
-            case "DARK_BLUE":
-            case "NAVY":
-                return Color.NAVY;
-            case "PINK":
-            case "FUCHSIA":
-                return Color.FUCHSIA;
-            case "PURPLE":
-                return Color.PURPLE;
-            case "ORANGE":
-                return Color.ORANGE;
-        }
+        return switch (string) {
+            case "WHITE" -> Color.WHITE;
+            case "DARK_GRAY", "SILVER" -> Color.SILVER;
+            case "GRAY" -> Color.GRAY;
+            case "BLACK" -> Color.BLACK;
+            case "RED" -> Color.RED;
+            case "DARK_RED", "MAROON" -> Color.MAROON;
+            case "YELLOW" -> Color.YELLOW;
+            case "OLIVE" -> Color.OLIVE;
+            case "LIME" -> Color.LIME;
+            case "GREEN" -> Color.GREEN;
+            case "AQUA" -> Color.AQUA;
+            case "CYAN", "TEAL" -> Color.TEAL;
+            case "BLUE" -> Color.BLUE;
+            case "DARK_BLUE", "NAVY" -> Color.NAVY;
+            case "PINK", "FUCHSIA" -> Color.FUCHSIA;
+            case "PURPLE" -> Color.PURPLE;
+            case "ORANGE" -> Color.ORANGE;
+            default -> Color.RED;
+        };
 
-        return Color.RED;
     }
 }
