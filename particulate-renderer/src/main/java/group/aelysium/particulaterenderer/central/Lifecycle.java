@@ -1,9 +1,14 @@
 package group.aelysium.particulaterenderer.central;
 
 import group.aelysium.particulaterenderer.ParticulateRenderer;
+import group.aelysium.particulaterenderer.command.CommandParticulate;
 import group.aelysium.particulaterenderer.config.DefaultConfig;
 import group.aelysium.particulaterenderer.config.EffectsConfig;
 import group.aelysium.particulaterenderer.config.EmittersConfig;
+import group.aelysium.particulaterenderer.lib.EffectRenderService;
+import group.aelysium.particulaterenderer.lib.EffectService;
+import group.aelysium.particulaterenderer.lib.EmitterService;
+import group.aelysium.particulaterenderer.lib.RunnerQueueService;
 import group.aelysium.particulaterenderer.lib.redis.RedisClient;
 
 import java.io.File;
@@ -18,15 +23,39 @@ public class Lifecycle {
     public boolean start() {
 
         loadConfigs();
+        loadCommands();
 
         this.isRunning = true;
         return true;
     }
-    public void stop() {}
+    public void stop() {
+        API api = ParticulateRenderer.getAPI();
+        api.killServices();
+    }
+
+    protected boolean loadCommands() {
+        API api = ParticulateRenderer.getAPI();
+        PluginLogger logger = api.getLogger();
+        try {
+
+            CommandParticulate.create(api.getCommandManager());
+
+            return true;
+        } catch (Exception e) {
+            logger.log(e.getMessage());
+            return false;
+        }
+    }
 
     protected boolean loadConfigs() {
         API api = ParticulateRenderer.getAPI();
         PluginLogger logger = api.getLogger();
+
+        api.registerService(new EmitterService());
+        api.registerService(new EffectService());
+        api.registerService(new RunnerQueueService());
+        api.registerService(new EffectRenderService());
+        api.getService(EffectRenderService.class).start();
 
         logger.log("Starting Renderer...");
         logger.log("Loading config.yml...");
@@ -36,6 +65,7 @@ public class Lifecycle {
         defaultConfig.register();
 
         handleDefaultConfig(defaultConfig);
+        DefaultConfig.empty();
 
 
         logger.log("Loading effects.yml...");
@@ -43,12 +73,14 @@ public class Lifecycle {
         if(!effectsConfig.generate())
             throw new IllegalStateException("Unable to load or create effects.yml!");
         effectsConfig.register();
+        EffectsConfig.empty();
 
         logger.log("Loading emitters.yml...");
         EmittersConfig emittersConfig = EmittersConfig.newConfig(new File(String.valueOf(api.getDataFolder()), "emitters.yml"), "paper_emitters_template.yml");
         if(!emittersConfig.generate())
             throw new IllegalStateException("Unable to load or create emitters.yml!");
         emittersConfig.register();
+        EmittersConfig.empty();
 
         logger.log("Finished!");
         return true;

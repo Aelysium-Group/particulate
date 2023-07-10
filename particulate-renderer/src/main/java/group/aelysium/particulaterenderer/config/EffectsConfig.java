@@ -8,8 +8,9 @@ import group.aelysium.particulaterenderer.lib.effects.Effect;
 import group.aelysium.particulaterenderer.lib.effects.FireworkEffect;
 import group.aelysium.particulaterenderer.lib.model.ColorParser;
 import group.aelysium.particulaterenderer.lib.model.DeltaLocation;
+import group.aelysium.particulaterenderer.lib.model.PotionParser;
+import group.aelysium.particulaterenderer.lib.model.ShapeParser;
 import org.bukkit.*;
-import org.bukkit.potion.PotionEffectType;
 import org.spongepowered.configurate.ConfigurationNode;
 
 import java.io.File;
@@ -105,15 +106,17 @@ public class EffectsConfig extends YAML {
                         } catch (Exception ignore) {}
 
                         try {
-                            List<String> stringColors = this.getNode(value, "colors", List.class);
+                            List<String> stringColors = get(value,"colors").getList(String.class);
                             for (String color : stringColors)
                                 fireworkBuilder.addColor(ColorParser.parse(color));
-                        } catch (Exception ignore) { }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         try {
-                            List<String> stringShapes = this.getNode(value, "shapes", List.class);
+                            List<String> stringShapes = get(value,"shapes").getList(String.class);
                             for (String shape : stringShapes)
-                                fireworkBuilder.addShape(org.bukkit.FireworkEffect.Type.valueOf(shape));
+                                fireworkBuilder.addShape(ShapeParser.parse(shape));
                         } catch (Exception ignore) {}
 
                         service.add(fireworkBuilder.build());
@@ -142,10 +145,17 @@ public class EffectsConfig extends YAML {
                     }
                     case "POTION" -> {
                         PotionEffect.Builder potionBuilder = new PotionEffect.Builder()
-                                .setId((int) key)
-                                .setType(PotionEffectType.getByName(this.getNode(value, "potion", String.class)))
-                                .setAmplifier(this.getNode(value, "amplifier", Integer.class))
-                                .setDuration(this.getNode(value, "duration", Integer.class));
+                                .setId((int) key);
+
+                        try {
+                            potionBuilder.setType(PotionParser.parse(this.getNode(value, "potion", String.class)));
+                        } catch (Exception ignore) {}
+                        try {
+                            potionBuilder.setAmplifier(this.getNode(value, "amplifier", Integer.class));
+                        } catch (Exception ignore) {}
+                        try {
+                            potionBuilder.setDuration(this.getNode(value, "duration", Integer.class));
+                        } catch (Exception ignore) {}
 
                         try {
                             DeltaLocation delta = new DeltaLocation(

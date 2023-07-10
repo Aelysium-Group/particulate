@@ -16,6 +16,9 @@ public class EmitterService extends Service {
     public Optional<EmitterCluster> find(String effectChannel) {
         return this.clusters.stream().filter(cluster -> cluster.getEffectChannel().equals(effectChannel)).findAny();
     }
+    public Vector<EmitterCluster> getAllEmitters() {
+        return this.clusters;
+    }
 
     public void remove(EmitterCluster cluster) {
         this.clusters.remove(cluster);
