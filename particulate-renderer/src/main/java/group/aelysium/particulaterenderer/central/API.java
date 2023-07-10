@@ -7,6 +7,7 @@ import group.aelysium.particulaterenderer.lib.EffectRenderService;
 import group.aelysium.particulaterenderer.lib.EffectService;
 import group.aelysium.particulaterenderer.lib.EmitterService;
 import group.aelysium.particulaterenderer.lib.RunnerQueueService;
+import group.aelysium.particulaterenderer.lib.model.Service;
 import group.aelysium.particulaterenderer.lib.model.Serviceable;
 import group.aelysium.particulaterenderer.lib.redis.RedisClient;
 import group.aelysium.particulaterenderer.lib.redis.RedisService;
@@ -30,11 +31,6 @@ public class API extends Serviceable {
 
     public API(ParticulateRenderer plugin, Logger logger) throws Exception {
         super(new HashMap<>());
-        this.services.put(EmitterService.class, new EmitterService());
-        this.services.put(EffectService.class, new EffectService());
-        this.services.put(RunnerQueueService.class, new RunnerQueueService());
-        this.services.put(EffectRenderService.class, new EffectRenderService());
-        this.getService(EffectRenderService.class).start();
 
         this.plugin = plugin;
         this.pluginLogger = new PluginLogger(logger);
@@ -89,5 +85,9 @@ public class API extends Serviceable {
 
     public PaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;
+    }
+
+    public void registerService(Service service) {
+        this.services.put(service.getClass(), service);
     }
 }

@@ -12,4 +12,11 @@ public abstract class Serviceable {
     public <S extends Service> S getService(Class<S> type) {
         return (S) this.services.get(type);
     }
+    public void killServices() {
+        this.services.forEach((key, service) -> {
+            try {
+                service.kill();
+            } catch (Exception ignore) {}
+        });
+    }
 }

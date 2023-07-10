@@ -15,6 +15,9 @@ public class EffectService extends Service {
     public Optional<Effect> find(int effectId) {
         return this.effects.stream().filter(effect -> effect.getId() == effectId).findFirst();
     }
+    public Vector<Effect> getAllEffects() {
+        return this.effects;
+    }
 
     public void remove(int effectId) {
         this.effects.removeIf(effect -> effect.getId() == effectId);

@@ -22,7 +22,7 @@ public class PotionEffect extends Effect {
     }
     protected PotionEffect(int id, org.bukkit.potion.PotionEffectType type, int duration, int amplifier) {
         super(id);
-        this.potionEffect = new org.bukkit.potion.PotionEffect(type, duration, amplifier);
+        this.potionEffect = new org.bukkit.potion.PotionEffect(type, duration, amplifier, false, false, false);
         this.global = true;
         this.area = null;
     }
@@ -39,7 +39,7 @@ public class PotionEffect extends Effect {
         for (Entity entity : location.getNearbyEntities(this.area.dx(), this.area.dy(), this.area.dz())) {
             if (entity instanceof Player)
                 try {
-                    Objects.requireNonNull(Bukkit.getPlayer(entity.getUniqueId())).addPotionEffect(this.potionEffect);
+                    ((Player) entity).addPotionEffect(this.potionEffect);
                 } catch (Exception ignore) {}
         }
     }
@@ -63,10 +63,10 @@ public class PotionEffect extends Effect {
 
     public static final class Builder {
         private Integer id;
-        private PotionEffectType type;
-        private Integer duration;
-        private Integer amplifier;
-        private Boolean global = false;
+        private PotionEffectType type = PotionEffectType.SPEED;
+        private Integer duration = 60;
+        private Integer amplifier = 1;
+        private Boolean global = true;
         private DeltaLocation area;
 
         public Builder setId(Integer id) {
@@ -99,7 +99,7 @@ public class PotionEffect extends Effect {
             if(this.duration == null) throw new NullPointerException();
             if(this.amplifier == null) throw new NullPointerException();
 
-            if(this.global == false) {
+            if(!this.global) {
                 if(this.area == null) throw new NullPointerException();
 
                 return new PotionEffect(
